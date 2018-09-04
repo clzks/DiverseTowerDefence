@@ -68,7 +68,7 @@ public class Bullet : MonoBehaviour
         AoESustainTime = t.AOSustainTime;
         nTowerId = towerId;
         nEffectId = 0;
-        doDamaged = false;    // 피해를 주었는가?
+        
 
         // 총알의 스탯  ------- 일단 투사체일때만
         nTowerType = t.TowerType;
@@ -281,7 +281,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)  // 데미지 입히는 부분
     {
-        if(!doDamaged && other.tag == "Enemy")
+        if(other.tag == "Enemy")
         {
             Enemy e = other.GetComponent<Enemy>();
 
@@ -502,18 +502,15 @@ public class Bullet : MonoBehaviour
     {
         EnemyList.Clear();
 
-        if (nAttackType == (int)ConstructManager.EAttackType.Splash) // SPlash
-        {
-            Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
+        Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
 
-            foreach (Collider col in cols)
+        foreach (Collider col in cols)
+        {
+            GameObject Temptarget = col.gameObject;
+            if (Temptarget.CompareTag("Enemy"))
             {
-                GameObject Temptarget = col.gameObject;
-                if (Temptarget.CompareTag("Enemy"))
-                {
-                    Enemy ee = Temptarget.GetComponent<Enemy>();
-                    EnemyList.Add(ee);
-                }
+                Enemy ee = Temptarget.GetComponent<Enemy>();
+                EnemyList.Add(ee);
             }
         }
     }
@@ -639,8 +636,11 @@ public class Bullet : MonoBehaviour
 
     public void DestroyBullet()
     {
-        FindSplashTargets();
 
+        if (nAttackType == (int)ConstructManager.EAttackType.Splash) // SPlash
+        {
+            FindSplashTargets();
+        }
         GameObject Bullet = transform.parent.gameObject;
         Bullet.SetActive(false);
         Destroy(this.gameObject);

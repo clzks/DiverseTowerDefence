@@ -109,7 +109,7 @@ public class Tower : MonoBehaviour
 
     public void SetTarget()
     {
-        if (BulletType != 3)
+        if (BulletType != (int)ConstructManager.EAttackType.Multi)
         {
             if (Target.Count == 0) // 타겟이 없으면 타깃을 설정한다
             {
@@ -165,7 +165,6 @@ public class Tower : MonoBehaviour
                     GameObject Temptarget = col.gameObject;
                     if (Temptarget.CompareTag("Enemy"))
                     {
-
                         Vector3 dir = Temptarget.transform.position - transform.position;
                         float fRange = dir.magnitude;
                         if (fRange <= fRealRange)
@@ -184,7 +183,7 @@ public class Tower : MonoBehaviour
                     transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
                 }
             }
-            if(Target.Count != 0)    // 타겟이 있으면
+            if(Target.Count != 0)    // 타겟이 있으면 0번 인덱스가 타깃
             {
                 TargetNum = 0;
                 foreach (Collider col in cols)
@@ -192,12 +191,12 @@ public class Tower : MonoBehaviour
                     GameObject Temptarget = col.gameObject;
                     if (Temptarget.CompareTag("Enemy"))
                     {
-                        TargetNum++;
+                        TargetNum++; 
                     }
                 }
-
+                
                 Collider[] cols2 = new Collider[TargetNum];
-
+                
                 foreach (Collider col in cols)
                 {
                     if (col.tag == "Enemy")
@@ -206,7 +205,7 @@ public class Tower : MonoBehaviour
                         TargetNum2++;
                     }
                 }
-
+                
                 if (cols2.Length > MultiNum)
                 {
                     for (int i = 0; i < cols2.Length - 1; ++i)            // 버블정렬로 cols를 가까운 순서대로 재정렬한다.
@@ -215,7 +214,7 @@ public class Tower : MonoBehaviour
                         {
                             float Range = (cols2[j].gameObject.transform.position - transform.position).magnitude;
                             float Range2 = (cols2[j + 1].gameObject.transform.position - transform.position).magnitude;
-
+                
                             if (Range2 < Range)
                             {
                                 Collider Temp = cols2[j];
@@ -225,15 +224,15 @@ public class Tower : MonoBehaviour
                         }
                     }
                 }
-
+                
                 for (int i = 0; i < cols2.Length; ++i) // for문을 통해 0번자리와 겹치지 않는 녀석들을 전부 넣어준다.
                 {
-                    if (cols2[i] != Target[0])
+                    if (cols2[i].gameObject != Target[0])
                     {
                         Target.Add(cols2[i].gameObject);
                     }
                 }
-
+                
                 while(Target.Count > MultiNum + 1)      // 멀티샷 포함 갯수보다 타깃이 많을경우 지워준다
                 {
                     Target.Remove(Target[Target.Count-1]);
