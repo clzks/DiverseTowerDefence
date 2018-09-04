@@ -74,6 +74,7 @@ public class Tower : MonoBehaviour
         {
             isStart = true;
         }
+        StartCoroutine("AttackTimer");
     }
 
     public void Update()
@@ -81,15 +82,13 @@ public class Tower : MonoBehaviour
         if (isStart)
         {
             vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
-
             
-            fCurrCooltime -= Time.deltaTime;
             if (fCurrCooltime <= 0)       // 타겟이 있고 쿨타임이 0보다 줄어들었다면
             {
-                if (TowerType != 6)
+                if (TowerType != (int)ConstructManager.ETowerType.Normal)
                 {
                     SetTarget();
-
+            
                     if (Target != null)
                     {
                         MakeBullet(Target);
@@ -110,7 +109,6 @@ public class Tower : MonoBehaviour
 
     public void SetTarget()
     {
-        
         if (BulletType != 3)
         {
             if (Target.Count == 0) // 타겟이 없으면 타깃을 설정한다
@@ -261,7 +259,7 @@ public class Tower : MonoBehaviour
 
     public void MakeBullet(List<GameObject> targets)
     {
-        if(TowerType == 4)
+        if(TowerType == (int)ConstructManager.ETowerType.Critical)  // 크리티컬 타워
         {
             float n = Random.Range(0.0f, 1.0f);
             
@@ -286,6 +284,7 @@ public class Tower : MonoBehaviour
             BulletManager.Instance.MakeBullet(ID, 0, false);
             fCurrCooltime = AtkSpd;
         }
+
         if (targets != null)
         {
             targets.Clear();
@@ -375,7 +374,7 @@ public class Tower : MonoBehaviour
     {
         Gizmos.color = Color.red;
 
-        if (TowerType == 6)
+        if (TowerType == (int)ConstructManager.ETowerType.Normal)
         {
             Gizmos.DrawWireSphere(transform.position, SplashRange);
         }
@@ -383,5 +382,15 @@ public class Tower : MonoBehaviour
         {
             Gizmos.DrawWireSphere(transform.position, Range);
         }
+    }
+
+    private IEnumerator AttackTimer()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (fCurrCooltime > 0.0f)
+        {
+            fCurrCooltime -= 0.2f;
+        }
+        StartCoroutine("AttackTimer");
     }
 }

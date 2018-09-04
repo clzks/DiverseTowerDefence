@@ -18,22 +18,15 @@ public class Bullet : MonoBehaviour
     public int nTowerType;
     public int nAttackType;
     public float fSplashRange;
-    public int nBounceTargetFirst;        // 필요한가..?
-    public int nBounceTargetSecond;       // 필요한가..?
-    public int nBounceTargetThird;        // 필요한가..?
     public float AoESustainTime;          // 광역총알의 남은 지속시간
-
-
+    public int nLife;
     public int nBouncingNum;
     public int nCurrBouncingNum = 0;
+
+
     public List<int> nBouncingTargets = new List<int>();
-    public List<bool> isBouncingDoDamage = new List<bool>();
+    //public List<bool> isBouncingDoDamage = new List<bool>();
     public float fBouncePerDamage;
-
-    public bool nBounceFirstDoDamage = false;
-    public bool nBounceSecondDoDamage = false;
-    public bool nBounceThirdDoDamage = false;
-
     public bool isCritical;
 
     public bool isAttackAoE = false;
@@ -48,7 +41,7 @@ public class Bullet : MonoBehaviour
     public Transform trLabelPool;
     public List<Enemy> EnemyList = new List<Enemy>();
     // ============================================================== //
-
+    
     private void Awake()
     {
         
@@ -61,8 +54,7 @@ public class Bullet : MonoBehaviour
         nId = BulletId;
         nAttackType = t.BulletType;     // 부득이하게 위로 올림
         isCritical = isCri;         // 크리티컬인지는 타워에서 결정을 지어줘야한다 이것도 위로 올려야함
-
-        if (t.TowerType != 6)
+        if (t.TowerType != (int)ConstructManager.ETowerType.Normal) // 근접타워
         {
             Target = t.Target[TargetListIndex];
             Enemy e = Target.GetComponent<Enemy>();
@@ -72,9 +64,6 @@ public class Bullet : MonoBehaviour
         {
             Target = null;
         }
-
-        
-
         transform.position = t.vMuzzlePos;
         AoESustainTime = t.AOSustainTime;
         nTowerId = towerId;
@@ -84,11 +73,20 @@ public class Bullet : MonoBehaviour
         // 총알의 스탯  ------- 일단 투사체일때만
         nTowerType = t.TowerType;
         fSplashRange = t.SplashRange;
-        nBounceTargetFirst = -1;           // 바운싱 관련 타깃
-        nBounceTargetSecond = -1;          // 바운싱 관련 타깃
-        nBounceTargetThird = -1;           // 바운싱 관련 타깃
         fBouncePerDamage = t.BounceDDR;
-        nBouncingNum = t.BounceNum;
+
+        if(nTowerType == (int)ConstructManager.ETowerType.Bouncing)
+        {
+            nLife = t.BounceNum;
+        }
+        else if (nTowerType == (int)ConstructManager.ETowerType.AoE)
+        {
+            nLife = (int)t.AOSustainTime;
+        }
+        else
+        {
+            nLife = 1;
+        }
         fSpeed = t.BulletSpd;
 
         fAttack = SetDamage(t);     // 데미지는 타워에서 결정하는구나, 최종으로 결정 
@@ -289,14 +287,23 @@ public class Bullet : MonoBehaviour
 
             if (nTargetId == e.Id)      // 적의 Id와 타깃의 아이디가 동일하다면
             {
-                if (nAttackType != 4)   // 스플래쉬 타입이 아니면
+                if (nAttackType != (int)ConstructManager.EAttackType.Splash && nAttackType != (int)ConstructManager.EAttackType.Bouncing)   // 스플래쉬 및 바운싱 타입이 아니면
                 {
                     EnemyList.Add(e);
                     DestroyBullet();
                 }
-                else                    // 스플래쉬 타입중에
+                else if (nAttackType == (int)ConstructManager.EAttackType.Bouncing) // 바운싱 타워라면
                 {
-                    if (nTowerType != 9)  // 장판타워가 아니라면
+                    EnemyList.Add(e);                                               // 데미지 리스트에 추가
+                    nBouncingTargets.Add(e.Id);                                     // 바운싱 리스트에 추가
+                    if (!FindBouncingTarget() || nLife <= nCurrBouncingNum)         // 타깃찾는 함수를 거쳐서 없으면 혹은 바운싱 최대 넘버가 되면 총알을 삭제시킨다.
+                    {                                                               // 그리고 중요한게 가던 중에 타깃이 죽으면 안팅긴다!!! 그것이 바로 설계
+                        DestroyBullet();
+                    }
+                }
+                else if(nAttackType == (int)ConstructManager.EAttackType.Splash)
+                { 
+                    if (nTowerType != (int)ConstructManager.ETowerType.AoE)  // 장판타워가 아니라면
                     {
                         DestroyBullet();
                     }
@@ -421,24 +428,23 @@ public class Bullet : MonoBehaviour
         float Damage = 0;
         switch (t.TowerType)
         {
-
-            case 0:     // Range계열
+            case (int)ConstructManager.ETowerType.Range:     // Range계열
                 Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage;
                 break;
 
-            case 1:     // 스프라시 계열
+            case (int)ConstructManager.ETowerType.Splash:     // 스프라시 계열
                 Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage;
                 break;
 
-            case 2:     // 바운싱
-                Damage = BounceDamage(t.Attack, t.BounceNum); // 수정필요 하겠지
+            case (int)ConstructManager.ETowerType.Bouncing:     // 바운싱
+                Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage; // 초기 데미지만 세팅
                 break;
 
-            case 3:     // 럭키
+            case (int)ConstructManager.ETowerType.Lucky:     // 럭키
                 Damage = Random.Range(t.MinDamage + t.UpgradePerMinD * t.CurrUpgradeNum, t.MaxDamage + t.UpgradePerMaxD * t.CurrUpgradeNum);
                 break;
 
-            case 4:     // 크리티커르 타워
+            case (int)ConstructManager.ETowerType.Critical:     // 크리티커르 타워
                 Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage;
 
                 if (isCritical)
@@ -447,34 +453,34 @@ public class Bullet : MonoBehaviour
                 }
                 break;
 
-            case 5:     // 래휘드
+            case (int)ConstructManager.ETowerType.Rapid:     // 래휘드
                 Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage;
                 break;
 
-            case 6:     // 근접
+            case (int)ConstructManager.ETowerType.Normal:     // 근접
                 Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage;
                 break;
 
-            case 7:     // 레이져
+            case (int)ConstructManager.ETowerType.Laser:     // 레이져
                 Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage;
                 break;
 
-            case 8:     // 독 뎀
+            case (int)ConstructManager.ETowerType.Dot:     // 독 뎀
                 Damage = t.Attack + t.CurrUpgradeNum * t.UPDD;
                 break;
 
-            case 9:     // 장판
+            case (int)ConstructManager.ETowerType.AoE:     // 장판
                 Damage = t.AODamage + t.UPDAO * t.CurrUpgradeNum;
                 break;
 
-            case 10:    // 멀티샷
+            case (int)ConstructManager.ETowerType.Multi:    // 멀티샷
                 Damage = t.Attack + t.CurrUpgradeNum * t.UpgradePerDamage;
                 break;
 
-            case 11:    // 란돔
+            case (int)ConstructManager.ETowerType.Random:    // 란돔
                 break;
 
-            case 12:    // 메타몬
+            case (int)ConstructManager.ETowerType.Metamon:    // 메타몬
                 break;
         }
         
@@ -487,7 +493,7 @@ public class Bullet : MonoBehaviour
     {
         for(int i = 0; i< EnemyList.Count; ++i)
         {
-            EnemyList[i].Damage(fAttack);   // 데미지는 타워에서 결정
+            EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
         }
     }
 
@@ -550,34 +556,31 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public float BounceDamage(float Atk, int nBounceNum)
+    public float BounceDamage()
     {
-        if(nBounceNum > 0)
+        if(nCurrBouncingNum > 0)
         {
-            for(int i = 0; i < nBounceNum; ++i)
-            {
-                Atk *= fBouncePerDamage;
-            }
+            fAttack *= fBouncePerDamage;
         }
 
-        return Atk;
+        return fAttack;
     }
 
     public bool FindBouncingTarget()
     {
-        Collider[] cols = Physics.OverlapSphere(transform.position, 4.0f);
-        float fRealRange = float.MaxValue;
-        GameObject target = null;
-        bool isExist = false;
+        Collider[] cols = Physics.OverlapSphere(transform.position, 4.0f); // 4.0f 범위 내의 충돌된 녀석들을 찾는다.
+        float fRealRange = float.MaxValue;                                 
+        GameObject target = null;                                          // 일단 타깃은 Null
+        bool isExist = false;                                              // 고로 존재하지 않는다고 해놓은 뒤
         
         foreach (Collider col in cols)
         {
             GameObject Temptarget = col.gameObject;
-            if (Temptarget.CompareTag("Enemy"))
+            if (Temptarget.CompareTag("Enemy"))                            // Enemy태그를 갖는 녀석들을 찾는다. 범위내에 있다면
             {
-                Enemy e = Temptarget.GetComponent<Enemy>();
+                Enemy e = Temptarget.GetComponent<Enemy>();                // 그녀석의 Enemy 스크립트를 찾고
                  
-                bool isOverlap = false;
+                bool isOverlap = false;                                    // 기존에 바운스된 타깃과 겹치는지 알아본다.
 
                 for (int i = 0; i < nBouncingTargets.Count; ++i)
                 {
@@ -587,7 +590,7 @@ public class Bullet : MonoBehaviour
                     }
                 }
 
-                if (isOverlap)
+                if (isOverlap)                                             // 바운스리스트와 겹치면 넘어간다. 안넘어가면 새로운 타깃을 찾은것
                 {
                     continue;
                 }
@@ -601,11 +604,14 @@ public class Bullet : MonoBehaviour
                 }
                 isExist = true;
             }
-            Target = target;
-            if (Target)
-            {
-                nTargetId = target.GetComponent<Enemy>().Id;
-            }
+        }
+        if (isExist)                                                    // 타깃이 존재한다면
+        {
+            EnemyList[0].Damage(this);                                  // 데미지를 주고\
+            EnemyList.Clear();
+            Target = target;                                            // 새로운 타깃을 설정
+            nTargetId = target.GetComponent<Enemy>().Id;                // 새로운 타깃 아이디도 저장
+            nCurrBouncingNum++;
         }
         return isExist;
     }
@@ -636,6 +642,12 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    private IEnumerator AoETimer()
+    {
+        nLife -= 1;
+        yield return new WaitForSeconds(1.0f);
+        StartCoroutine("AttackTimer");
+    }
 }
 
 

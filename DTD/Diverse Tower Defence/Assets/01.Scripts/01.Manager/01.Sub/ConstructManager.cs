@@ -143,6 +143,34 @@ public class ConstructManager : MonoBehaviour
         }
     }
 
+    public enum ETowerType
+    {
+        Range,
+        Splash,
+        Bouncing,
+        Lucky,
+        Critical,
+        Rapid,
+        Normal,
+        Laser,
+        Dot,
+        AoE,
+        Multi,
+        Random,
+        Metamon
+    }
+    
+    public enum EAttackType
+    {
+        Normal,
+        Projectile,
+        Laser,
+        Multi,
+        Splash,
+        Bouncing,
+        Instant
+    }
+
     private void Start()
     {
         LoadTowerModel();

@@ -46,92 +46,74 @@ public class Enemy : MonoBehaviour
     public void Damage(float f) // 기본피해
     {
         Curr_HP -= f;
-        Debug.Log("입은 피해 : " + f.ToString());
+        Debug.Log("입은 피해 : " + f.ToString()); 
     }
 
     public void Damage(Bullet b)
     {
         switch (b.nTowerType)
         {
-            case 0: 
+            case (int)ConstructManager.ETowerType.Range: 
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
             break;
 
-            case 1:
+            case (int)ConstructManager.ETowerType.Splash:
                
             break;
 
-            case 2:
-                //int BounceNum = b.nCurrBouncingNum;
-                //float Atk = b.fAttack;
-                //b.isArriveDest = true;
-                //b.nBouncingTargets.Add(Id);
-                //
-                //if (BounceNum > 0)
-                //{
-                //    for (int i = 0; i < BounceNum; ++i)
-                //    {
-                //        Atk *= b.fBouncePerDamage;
-                //    }
-                //}
-                //Curr_HP -= Atk;
-                //Debug.Log("입은 피해 : " + Atk.ToString());
-                //b.nCurrBouncingNum++;
-                //b.Target = null;
-            break;
+            case (int)ConstructManager.ETowerType.Bouncing:
+                float Atk = b.BounceDamage();
+                Curr_HP -= Atk;
+                Debug.Log("입은 피해 : " + Atk.ToString());
+                break;
 
-            case 3:             // 렄키
+            case (int)ConstructManager.ETowerType.Lucky:             // 렄키
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 4:             // 크리티컬
+            case (int)ConstructManager.ETowerType.Critical:             // 크리티컬
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 5:             // 래피드
+            case (int)ConstructManager.ETowerType.Rapid:             // 래피드
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 6:             // 노멀
+            case (int)ConstructManager.ETowerType.Normal:             // 노멀
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 7:             // 레이저
+            case (int)ConstructManager.ETowerType.Laser:             // 레이저
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 8:             // 도트뎀
+            case (int)ConstructManager.ETowerType.Dot:             // 도트뎀
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 9:             // 광역
+            case (int)ConstructManager.ETowerType.AoE:             // 광역 아직 안됐네;;
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 10:             // 멀티샷
+            case (int)ConstructManager.ETowerType.Multi:             // 멀티샷
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 11:             // 랜덤
+            case (int)ConstructManager.ETowerType.Random:             // 랜덤
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
 
-            case 12:             // 메타몬
-                Curr_HP -= b.fAttack;
-                Debug.Log("입은 피해 : " + b.fAttack.ToString());
-                break;
-
-            case 13:             // 랜덤
+            case (int)ConstructManager.ETowerType.Metamon:             // 메타몬
                 Curr_HP -= b.fAttack;
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
