@@ -95,8 +95,17 @@ public class Enemy : MonoBehaviour
                 break;
 
             case (int)ConstructManager.ETowerType.Dot:             // 도트뎀
-                Curr_HP -= b.fAttack;
-                Debug.Log("입은 피해 : " + b.fAttack.ToString());
+                //Curr_HP -= b.fAttack;
+                //Debug.Log("입은 피해 : " + b.fAttack.ToString());
+                if(RemainDotTime == 0)
+                {
+                    RemainDotTime = b.nDotTime;
+                    StartCoroutine(DotAttack(b));
+                }
+                else
+                {
+                    RemainDotTime = b.nDotTime;
+                }
                 break;
 
             case (int)ConstructManager.ETowerType.AoE:             // 광역 아직 안됐네;;
@@ -121,18 +130,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
-    public void Damage(float f, int i)  // 도트뎀 피해 
+    public IEnumerator DotAttack(Bullet b)
     {
-        Curr_HP -= f;
-        i -= 1;
-
-        if(i == 0)
+        if(RemainDotTime > 0)
         {
-            RemainDotTime = 0;
-            CurrDotDamage = 0;
+            Curr_HP -= b.fDotDamage;
+            Debug.Log("입은 피해 : " + b.fAttack.ToString());
+            RemainDotTime--;
         }
-        Debug.Log("입은 피해 : " + f.ToString() + "  남은 지속 시간 : " + i.ToString());
+        yield return new WaitForSeconds(1.0f);
+        if(RemainDotTime > 0)
+        {
+            StartCoroutine(DotAttack(b));
+        }
     }
 
     public void FixedUpdate()
@@ -169,12 +179,7 @@ public class Enemy : MonoBehaviour
 
         ProgressBar.value = Curr_HP / Max_HP;
 
-        if (RemainDotTime > 0)
-        {
-            Damage(CurrDotDamage, RemainDotTime);
-        }
-
-        else if (Curr_HP <= 0)
+        if (Curr_HP <= 0)
         {
             if (GameManager.Instance.nCurrentScene == 1)
             {

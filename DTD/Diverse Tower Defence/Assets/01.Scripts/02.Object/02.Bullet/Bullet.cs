@@ -22,7 +22,8 @@ public class Bullet : MonoBehaviour
     public int nLife;
     public int nBouncingNum;
     public int nCurrBouncingNum = 0;
-
+    public int nDotTime;                  // Dot 지속시간
+    public float fDotDamage;
 
     public List<int> nBouncingTargets = new List<int>();
     //public List<bool> isBouncingDoDamage = new List<bool>();
@@ -30,7 +31,6 @@ public class Bullet : MonoBehaviour
     public bool isCritical;
 
     public bool isAttackAoE = false;
-    float nTimer = 0.5f;    // 광역 타이머
     // ================ 총알이 날아가는데 필요 ======================== //
     public float fSpeed;
     public Vector3 vDir = new Vector3(0, 0, 0);
@@ -54,6 +54,8 @@ public class Bullet : MonoBehaviour
         nId = BulletId;
         nAttackType = t.BulletType;     // 부득이하게 위로 올림
         isCritical = isCri;         // 크리티컬인지는 타워에서 결정을 지어줘야한다 이것도 위로 올려야함
+        nDotTime = (int)t.DotSustainTime;
+        fDotDamage = t.DotDamage;
         if (t.TowerType != (int)ConstructManager.ETowerType.Normal) // 근접타워
         {
             Target = t.Target[TargetListIndex];

@@ -273,7 +273,7 @@ public class Tower : MonoBehaviour
         {
             for (int i = 0; i < targets.Count; ++i)
             {
-                Enemy e = targets[i].GetComponent<Enemy>();
+                //Enemy e = targets[i].GetComponent<Enemy>();
                 BulletManager.Instance.MakeBullet(ID, i, isCritical);
             }
             fCurrCooltime = AtkSpd;
