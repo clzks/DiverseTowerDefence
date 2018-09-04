@@ -118,16 +118,16 @@ public class Bullet : MonoBehaviour
 
             if (Vector3.Distance(transform.position, vDestination) <= 0.05f)
             {
-                if (nTowerType != 9)
+                if (nTowerType != (int)ConstructManager.ETowerType.AoE)
                 {
                     DestroyBullet();
                 }
                 else
                 {
-                    isAttackAoE = true;
+                    //isAttackAoE = true;
+                    StartCoroutine("AoEAttack");
                 }
             }
-
         }
 
         transform.position += fSpeed * vDir * 0.1f * GameManager.Instance.nGameSpeed;
@@ -274,7 +274,7 @@ public class Bullet : MonoBehaviour
     private void Update()
     {
         // 장판데미지는 이곳에서 할수밖에 없을듯..
-        AoEBullet();
+        //AoEBullet();   아닌듯
     }
 
     
@@ -309,7 +309,8 @@ public class Bullet : MonoBehaviour
                     }
                     else                  // 장판타워라면
                     {
-                        isAttackAoE = true;
+                        //isAttackAoE = true;
+                        StartCoroutine("AoEAttack");
                     }
                 }
                 //if(nTowerType == 1)
@@ -499,7 +500,9 @@ public class Bullet : MonoBehaviour
 
     public void FindSplashTargets()
     {
-        if (nAttackType == 4) // SPlash
+        EnemyList.Clear();
+
+        if (nAttackType == (int)ConstructManager.EAttackType.Splash) // SPlash
         {
             Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
 
@@ -515,46 +518,64 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void AoEBullet()
+    public IEnumerator AoEAttack()
     {
-        
-        if (nTowerType == 9 && isAttackAoE)
+        FindSplashTargets();
+        for (int i = 0; i < EnemyList.Count; ++i)
         {
-            if (AoESustainTime > 0)
-            {
-                Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
+            EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
+        }
+        nLife--;
 
-                foreach (Collider col in cols)
-                {
-                    GameObject Temptarget = col.gameObject;
-                    if (Temptarget.CompareTag("Enemy"))
-                    {
-                        Enemy ee = Temptarget.GetComponent<Enemy>();
-                        EnemyList.Add(ee);
-                    }
-                }
-
-                if (nTimer <= 0.5f)
-                {
-                    for (int i = 0; i < EnemyList.Count; ++i)
-                    {
-                        EnemyList[i].Damage(fAttack);   // 데미지는 타워에서 결정
-                    }
-                }
-                nTimer -= Time.deltaTime;
-                AoESustainTime -= Time.deltaTime;
-            }
-            if(nTimer <= 0.0f)
-            {
-                nTimer = 1.0f;
-            }
-
-            if(AoESustainTime <= 0)
-            {
-                DestroyBullet();
-            }
+        yield return new WaitForSeconds(1.0f);
+        if (nLife > 0)
+        {
+            StartCoroutine("AoEAttack");
+        }
+        else
+        {
+            DestroyBullet();
         }
     }
+
+    //public void AoEBullet()
+    //{
+    //    {
+    //        if (AoESustainTime > 0)
+    //        {
+    //            Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
+    //
+    //            foreach (Collider col in cols)
+    //            {
+    //                GameObject Temptarget = col.gameObject;
+    //                if (Temptarget.CompareTag("Enemy"))
+    //                {
+    //                    Enemy ee = Temptarget.GetComponent<Enemy>();
+    //                    EnemyList.Add(ee);
+    //                }
+    //            }
+    //
+    //            if (nTimer <= 0.5f)
+    //            {
+    //                for (int i = 0; i < EnemyList.Count; ++i)
+    //                {
+    //                    EnemyList[i].Damage(fAttack);   // 데미지는 타워에서 결정
+    //                }
+    //            }
+    //            nTimer -= Time.deltaTime;
+    //            AoESustainTime -= Time.deltaTime;
+    //        }
+    //        if(nTimer <= 0.0f)
+    //        {
+    //            nTimer = 1.0f;
+    //        }
+    //
+    //        if(AoESustainTime <= 0)
+    //        {
+    //            DestroyBullet();
+    //        }
+    //    }
+    //}
 
     public float BounceDamage()
     {
@@ -640,13 +661,6 @@ public class Bullet : MonoBehaviour
                 Gizmos.DrawWireSphere(transform.position, fSplashRange);
                 break;
         }
-    }
-
-    private IEnumerator AoETimer()
-    {
-        nLife -= 1;
-        yield return new WaitForSeconds(1.0f);
-        StartCoroutine("AttackTimer");
     }
 }
 

@@ -59,8 +59,9 @@ public class Enemy : MonoBehaviour
             break;
 
             case (int)ConstructManager.ETowerType.Splash:
-               
-            break;
+                Curr_HP -= b.fAttack;
+                Debug.Log("입은 피해 : " + b.fAttack.ToString());
+                break;
 
             case (int)ConstructManager.ETowerType.Bouncing:
                 float Atk = b.BounceDamage();
