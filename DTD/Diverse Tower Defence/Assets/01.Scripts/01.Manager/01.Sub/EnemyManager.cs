@@ -255,7 +255,7 @@ public class EnemyManager : MonoBehaviour
        
     }
 
-    public bool isEliminate()
+    public bool IsEliminate()
     {
         if (!isBossGen) // 보스 라운드 아닐때
         {

@@ -24,6 +24,7 @@ public class Bullet : MonoBehaviour
     public int nCurrBouncingNum = 0;
     public int nDotTime;                  // Dot 지속시간
     public float fDotDamage;
+    public int nlevel;
 
     public List<int> nBouncingTargets = new List<int>();
     //public List<bool> isBouncingDoDamage = new List<bool>();
@@ -41,14 +42,21 @@ public class Bullet : MonoBehaviour
     public Transform trLabelPool;
     public List<Enemy> EnemyList = new List<Enemy>();
     // ============================================================== //
-    
+
+    public GameObject HitPoint = null;
+    public GameObject LaserBody = null;
+
     private void Awake()
     {
-        
+        if (nAttackType == (int)ConstructManager.EAttackType.Laser)
+        {
+            StartCoroutine("LaserAttack");
+        }
     }
 
     public void SetBullet(int towerId, int BulletId, int TargetListIndex, bool isCri)
     {
+       
         //int TowerTypeIndex = ConstructManager.Instance.groundInfoList[towerId].TowerIndex;
         Tower t = ConstructManager.Instance.UserTowerDic[towerId].GetComponent<Tower>();
         nId = BulletId;
@@ -70,7 +78,7 @@ public class Bullet : MonoBehaviour
         AoESustainTime = t.AOSustainTime;
         nTowerId = towerId;
         nEffectId = 0;
-        
+        nlevel = t.Level;
 
         // 총알의 스탯  ------- 일단 투사체일때만
         nTowerType = t.TowerType;
@@ -85,14 +93,25 @@ public class Bullet : MonoBehaviour
         {
             nLife = (int)t.AOSustainTime;
         }
+        else if (nTowerType == (int)ConstructManager.ETowerType.Laser)
+        {
+            nLife = (int)t.RayLength;
+        }
         else
         {
             nLife = 1;
         }
         fSpeed = t.BulletSpd;
 
+        if (nAttackType == (int)ConstructManager.EAttackType.Laser)
+        {
+            HitPoint = this.transform.Find("HitPoint").gameObject;
+            LaserBody = this.transform.Find("LaserBody").gameObject;
+        }
+
         fAttack = SetDamage(t);     // 데미지는 타워에서 결정하는구나, 최종으로 결정 
         //lbDamage.text = fAttack.ToString();
+        
     }
 
    
@@ -116,161 +135,36 @@ public class Bullet : MonoBehaviour
         }
         else
         {
-            vDir = Vector3.Normalize(vDestination - transform.position);
+            vDir = Vector3.Normalize(vDestination - transform.position);        // 방향을 계속 설정한다. 타깃이 죽은 후라도
 
-            if (Vector3.Distance(transform.position, vDestination) <= 0.05f)
+            if (Vector3.Distance(transform.position, vDestination) <= 0.05f)    // 타깃이 죽은 자리에 총알이 도달했을 때
             {
                 if (nTowerType != (int)ConstructManager.ETowerType.AoE)
                 {
-                    DestroyBullet();
+                    DestroyBullet();                                            // 장판 총알이 아니라면 바로 삭제시키고
                 }
                 else
                 {
                     //isAttackAoE = true;
-                    StartCoroutine("AoEAttack");
+                    StartCoroutine("AoEAttack");                                // 장판 총알이면 장판데미지 코루틴 발동
                 }
             }
         }
 
-        transform.position += fSpeed * vDir * 0.1f * GameManager.Instance.nGameSpeed;
-
-        //switch (nAttackType)
-        //{
-        //    case 0:
-        //
-        //    if (Target != null)
-        //    {
-        //        transform.position = Target.transform.position;
-        //        vDestination = Target.transform.position;
-        //    }
-        //    else
-        //    {
-        //        vDir = Vector3.Normalize(vDestination - transform.position);
-        //
-        //        if (Vector3.Distance(transform.position, vDestination) <= 0.05f)
-        //        {
-        //            doDamaged = true;
-        //        }
-        //
-        //    }
-        //
-        //    break;
-        //
-        //    case 1:
-        //
-        //    if (Target != null)
-        //    {
-        //        if (GameManager.Instance.nCurrentScene == 1) // Test맵에서는 이네미가 상위 개체를 가지고 있어서 그녀석을 따라가는것이며
-        //        {
-        //            vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);       
-        //        }
-        //        else if (GameManager.Instance.nCurrentScene == 2)   // BulletTest에서는 상위개체를 안가지고 있다.
-        //        {
-        //            vDir = Vector3.Normalize(Target.transform.transform.position - transform.position);
-        //        }
-        //        vDestination = Target.transform.position;
-        //    }
-        //    else
-        //    {
-        //        vDir = Vector3.Normalize(vDestination - transform.position);
-        //
-        //        if (Vector3.Distance(transform.position , vDestination) <= 0.05f)
-        //        {
-        //            doDamaged = true;
-        //        }
-        //
-        //    }
-        //    break;
-        //
-        //    case 5:                         // 바운싱 뷸렛
-        //
-        //    if (Target != null)             // 바운싱 뷸렛도 타깃을 바꿔가면서 계속 쫒아간다.
-        //    {
-        //        if (GameManager.Instance.nCurrentScene == 1) // Test맵에서는 이네미가 상위 개체를 가지고 있어서 그녀석을 따라가는것이며
-        //        {
-        //            vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);
-        //        }
-        //        else if (GameManager.Instance.nCurrentScene == 2)   // BulletTest에서는 상위개체를 안가지고 있다.
-        //        {
-        //            vDir = Vector3.Normalize(Target.transform.transform.position - transform.position);
-        //        }
-        //        vDestination = Target.transform.position;
-        //        isArriveDest = false;
-        //    }
-        //    else
-        //    {
-        //        vDir = Vector3.Normalize(vDestination - transform.position);
-        //
-        //        if (Vector3.Distance(transform.position, vDestination) <= 0.05f)
-        //        {
-        //            isArriveDest = true;
-        //        }
-        //
-        //        if(nCurrBouncingNum >= nBouncingNum)
-        //        {
-        //            doDamaged = true;
-        //        }
-        //        if(isArriveDest) // 타깃이 도중에 죽어서 사라진 그 자리에 도달했을 경우나 타깃에게 도달했을 경우
-        //        {
-        //            if(!FindBouncingTarget())
-        //            {
-        //                doDamaged = true;
-        //            }
-        //        }
-        //    }
-        //
-        //    break;
-        //
-        //    case 3:             // 멀티샷
-        //
-        //    if (Target != null)
-        //    {
-        //        if (GameManager.Instance.nCurrentScene == 1) // Test맵에서는 이네미가 상위 개체를 가지고 있어서 그녀석을 따라가는것이며
-        //        {
-        //            vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);
-        //        }
-        //        else if (GameManager.Instance.nCurrentScene == 2)   // BulletTest에서는 상위개체를 안가지고 있다.
-        //        {
-        //            vDir = Vector3.Normalize(Target.transform.transform.position - transform.position);
-        //        }
-        //        vDestination = Target.transform.position;
-        //    }
-        //    else
-        //    {
-        //        vDir = Vector3.Normalize(vDestination - transform.position);
-        //
-        //        if (Vector3.Distance(transform.position, vDestination) <= 0.05f)
-        //        {
-        //                doDamaged = true;
-        //        }
-        //    }
-        //    break;
-        //
-        //    case 4:                 // 스플래쉬       
-        //        if (Target != null)
-        //        {
-        //            if (GameManager.Instance.nCurrentScene == 1) // Test맵에서는 이네미가 상위 개체를 가지고 있어서 그녀석을 따라가는것이며
-        //            {
-        //                vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);
-        //            }
-        //            else if (GameManager.Instance.nCurrentScene == 2)   // BulletTest에서는 상위개체를 안가지고 있다.
-        //            {
-        //                vDir = Vector3.Normalize(Target.transform.transform.position - transform.position);
-        //            }
-        //            vDestination = Target.transform.position;
-        //        }
-        //        else
-        //        {
-        //            vDir = Vector3.Normalize(vDestination - transform.position);
-        //
-        //            if (Vector3.Distance(transform.position, vDestination) <= 0.05f)
-        //            {
-        //                isArriveDest = true;
-        //            }
-        //        }
-        //        break;
-        //}
-
+        if (nAttackType != (int)ConstructManager.EAttackType.Laser)
+        {
+            vDir.y = 0.0f;
+            transform.position += fSpeed * vDir * 0.1f * GameManager.Instance.nGameSpeed;
+            transform.rotation = Quaternion.LookRotation(vDir);                 // 아주 좋구연
+        }
+        else
+        {
+            vDir.y = 0.0f;
+            HitPoint.transform.position += fSpeed * vDir * 0.1f * GameManager.Instance.nGameSpeed;
+            LaserBody.transform.rotation = Quaternion.LookRotation(vDir);
+            LaserBody.transform.localScale += new Vector3(0, 0, 1) *fSpeed * 0.1f * GameManager.Instance.nGameSpeed;
+            LaserBody.transform.position += fSpeed * vDir * 0.05f * GameManager.Instance.nGameSpeed;
+        }
     }
 
     private void Update()
@@ -289,7 +183,7 @@ public class Bullet : MonoBehaviour
 
             if (nTargetId == e.Id)      // 적의 Id와 타깃의 아이디가 동일하다면
             {
-                if (nAttackType != (int)ConstructManager.EAttackType.Splash && nAttackType != (int)ConstructManager.EAttackType.Bouncing)   // 스플래쉬 및 바운싱 타입이 아니면
+                if (nAttackType != (int)ConstructManager.EAttackType.Splash && nAttackType != (int)ConstructManager.EAttackType.Bouncing && nAttackType != (int)ConstructManager.EAttackType.Laser)   // 스플래쉬 및 바운싱 타입이 아니면
                 {
                     EnemyList.Add(e);
                     DestroyBullet();
@@ -315,114 +209,11 @@ public class Bullet : MonoBehaviour
                         StartCoroutine("AoEAttack");
                     }
                 }
-                //if(nTowerType == 1)
-                //{
-                //    isArriveDest = true;
-                //    Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
-                //
-                //    foreach (Collider col in cols)
-                //    {
-                //        GameObject Temptarget = col.gameObject;
-                //        if (Temptarget.CompareTag("Enemy"))
-                //        {
-                //            Enemy ee = Temptarget.GetComponent<Enemy>();
-                //            ee.Damage(fAttack);
-                //        }
-                //    }
-                //}
-                //doDamaged = true;
-                //e.Damage(this);
+            }
 
-                //switch (nTowerType)
-                //{
-                //    case 0:             // 레인지
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 1:             // 스플래쉬
-                //        isArriveDest = true;
-                //        Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
-                //
-                //        foreach (Collider col in cols)
-                //        {
-                //            GameObject Temptarget = col.gameObject;
-                //            if (Temptarget.CompareTag("Enemy"))
-                //            {
-                //                Enemy ee = Temptarget.GetComponent<Enemy>();
-                //                ee.Damage(fAttack);
-                //            }
-                //        }
-                //        doDamaged = true;
-                //        break;
-                //
-                //    //case 2:             // 바운싱
-                //    //e.Damage(fAttack);
-                //    //break;
-                //
-                //    case 3:             // 렄키
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 4:             // 크리티컬
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 5:             // 래피드
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 6:             // 노멀
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 7:             // 레이저
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 8:             // 도트뎀
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 9:             // 광역
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 10:             // 멀티샷
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 11:             // 랜덤
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 12:             // 메타몬
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 13:             // 랜덤
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 14:             // 랜덤
-                //        e.Damage(fAttack);
-                //        break;
-                //
-                //    case 15:             // 랜덤
-                //        e.Damage(fAttack);
-                //        break;
-                //}
-                //if (nTowerType != 2)
-                //{
-                //    doDamaged = true;
-                //}
-                //else    // 바운싱 타워일때 데미지 입히는 것
-                //{
-                //    isArriveDest = true;
-                //    nBouncingTargets.Add(e.Id);
-                //    e.Damage(BounceDamage(fAttack, nCurrBouncingNum));
-                //    nCurrBouncingNum++;
-                //    Target = null;
-                //}
+            if (nAttackType == (int)ConstructManager.EAttackType.Laser)
+            {
+                LaserDamage(e);
             }
         }
     }
@@ -494,9 +285,12 @@ public class Bullet : MonoBehaviour
 
     private void OnDestroy()
     {
-        for(int i = 0; i< EnemyList.Count; ++i)
+        if (nAttackType != (int)ConstructManager.EAttackType.Laser) // 레이저 타워가 아니라면
         {
-            EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
+            for (int i = 0; i < EnemyList.Count; ++i)
+            {
+                EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
+            }
         }
     }
 
@@ -537,44 +331,47 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    //public void AoEBullet()
-    //{
-    //    {
-    //        if (AoESustainTime > 0)
-    //        {
-    //            Collider[] cols = Physics.OverlapSphere(transform.position, fSplashRange);
-    //
-    //            foreach (Collider col in cols)
-    //            {
-    //                GameObject Temptarget = col.gameObject;
-    //                if (Temptarget.CompareTag("Enemy"))
-    //                {
-    //                    Enemy ee = Temptarget.GetComponent<Enemy>();
-    //                    EnemyList.Add(ee);
-    //                }
-    //            }
-    //
-    //            if (nTimer <= 0.5f)
-    //            {
-    //                for (int i = 0; i < EnemyList.Count; ++i)
-    //                {
-    //                    EnemyList[i].Damage(fAttack);   // 데미지는 타워에서 결정
-    //                }
-    //            }
-    //            nTimer -= Time.deltaTime;
-    //            AoESustainTime -= Time.deltaTime;
-    //        }
-    //        if(nTimer <= 0.0f)
-    //        {
-    //            nTimer = 1.0f;
-    //        }
-    //
-    //        if(AoESustainTime <= 0)
-    //        {
-    //            DestroyBullet();
-    //        }
-    //    }
-    //}
+    public void LaserDamage(Enemy e)
+    {
+        bool isOverapped = false;
+
+        if (EnemyList.Count != 0)
+        {
+            for(int i = 0; i < EnemyList.Count; ++i)
+            {
+                if(EnemyList[i] == e)
+                {
+                    isOverapped = true;
+                    break;
+                }
+            }
+            if (!isOverapped)
+            {
+                e.Damage(this);
+                EnemyList.Add(e);
+            }
+        }
+        else
+        {
+            e.Damage(this);
+            EnemyList.Add(e);
+        }
+
+    }
+
+    public IEnumerator LaserAttack()
+    {
+        nLife--;
+        yield return new WaitForSeconds(1.0f);
+        if(nLife <= 0)
+        {
+            DestroyBullet();
+        }
+        else
+        {
+            StartCoroutine("LaserAttack");
+        }
+    }
 
     public float BounceDamage()
     {
@@ -588,7 +385,7 @@ public class Bullet : MonoBehaviour
 
     public bool FindBouncingTarget()
     {
-        Collider[] cols = Physics.OverlapSphere(transform.position, 4.0f); // 4.0f 범위 내의 충돌된 녀석들을 찾는다.
+        Collider[] cols = Physics.OverlapSphere(transform.position, 4.0f); // 4.0f(임시) 범위 내의 충돌된 녀석들을 찾는다.
         float fRealRange = float.MaxValue;                                 
         GameObject target = null;                                          // 일단 타깃은 Null
         bool isExist = false;                                              // 고로 존재하지 않는다고 해놓은 뒤
@@ -638,7 +435,6 @@ public class Bullet : MonoBehaviour
 
     public void DestroyBullet()
     {
-
         if (nAttackType == (int)ConstructManager.EAttackType.Splash) // SPlash
         {
             FindSplashTargets();
@@ -652,7 +448,6 @@ public class Bullet : MonoBehaviour
     {
         switch (nAttackType)
         {
-
             case 5:
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(transform.position, 4.0f);

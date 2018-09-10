@@ -123,7 +123,7 @@ public class StageManager : MonoBehaviour
 
                 case 2:
                     EnemyManager.Instance.RunEnemy();
-                    if (EnemyManager.Instance.isEliminate())
+                    if (EnemyManager.Instance.IsEliminate())
                     {
                         nPhase = 3;
                     }

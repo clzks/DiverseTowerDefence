@@ -13,8 +13,11 @@ public class Enemy : MonoBehaviour
     public float Curr_HP;
     public float Speed;
     public int CurrNode;
+
     public int RemainDotTime;
     public float CurrDotDamage;
+    public int CurrDotLevel;
+
     public float Max_HP;
 
     public UISlider ProgressBar;        // 체력바
@@ -40,7 +43,7 @@ public class Enemy : MonoBehaviour
         CurrNode = es.nCurrNode;
         RemainDotTime = es.nRemainDotTime;
         CurrDotDamage = es.fCurrDotDamage;
-        
+        CurrDotLevel = 0;
     }
 
     public void Damage(float f) // 기본피해
@@ -100,11 +103,15 @@ public class Enemy : MonoBehaviour
                 if(RemainDotTime == 0)
                 {
                     RemainDotTime = b.nDotTime;
+                    CurrDotLevel = b.nlevel;
                     StartCoroutine(DotAttack(b));
                 }
                 else
                 {
-                    RemainDotTime = b.nDotTime;
+                    if (b.nlevel >= CurrDotLevel)
+                    {
+                        RemainDotTime = b.nDotTime;
+                    }
                 }
                 break;
 
@@ -138,10 +145,18 @@ public class Enemy : MonoBehaviour
             Debug.Log("입은 피해 : " + b.fAttack.ToString());
             RemainDotTime--;
         }
+        else
+        {
+            CurrDotLevel = 0;
+        }
         yield return new WaitForSeconds(1.0f);
         if(RemainDotTime > 0)
         {
             StartCoroutine(DotAttack(b));
+        }
+        else
+        {
+            CurrDotLevel = 0;
         }
     }
 

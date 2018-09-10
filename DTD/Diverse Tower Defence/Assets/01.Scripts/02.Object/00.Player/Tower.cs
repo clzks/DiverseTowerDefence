@@ -79,27 +79,7 @@ public class Tower : MonoBehaviour
 
     public void Update()
     {
-        if (isStart)
-        {
-            vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
-            
-            if (fCurrCooltime <= 0)       // 타겟이 있고 쿨타임이 0보다 줄어들었다면
-            {
-                if (TowerType != (int)ConstructManager.ETowerType.Normal)
-                {
-                    SetTarget();
-            
-                    if (Target != null)
-                    {
-                        MakeBullet(Target);
-                    }
-                }
-                else
-                {
-                    MakeBullet(null);
-                }
-            }
-        }
+       
     }
 
     public void OnTriggerEnter(Collider other)
@@ -109,6 +89,14 @@ public class Tower : MonoBehaviour
 
     public void SetTarget()
     {
+        if(Target.Count != 0)
+        {
+            if(Target[0] == null)
+            {
+                Target.Clear();
+            }
+        }
+
         if (BulletType != (int)ConstructManager.EAttackType.Multi)
         {
             if (Target.Count == 0) // 타겟이 없으면 타깃을 설정한다
@@ -183,6 +171,7 @@ public class Tower : MonoBehaviour
                     transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
                 }
             }
+
             if(Target.Count != 0)    // 타겟이 있으면 0번 인덱스가 타깃
             {
                 TargetNum = 0;
@@ -271,10 +260,21 @@ public class Tower : MonoBehaviour
 
         if (targets != null)
         {
-            for (int i = 0; i < targets.Count; ++i)
+            if (BulletType != (int)ConstructManager.EAttackType.Laser)
             {
-                //Enemy e = targets[i].GetComponent<Enemy>();
-                BulletManager.Instance.MakeBullet(ID, i, isCritical);
+                for (int i = 0; i < targets.Count; ++i)
+                {
+                    //Enemy e = targets[i].GetComponent<Enemy>();
+                    BulletManager.Instance.MakeBullet(ID, i, isCritical);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < targets.Count; ++i)
+                {
+                    //Enemy e = targets[i].GetComponent<Enemy>();
+                    BulletManager.Instance.MakeLaserBullet(ID, i, isCritical);
+                }
             }
             fCurrCooltime = AtkSpd;
         }
@@ -283,8 +283,8 @@ public class Tower : MonoBehaviour
             BulletManager.Instance.MakeBullet(ID, 0, false);
             fCurrCooltime = AtkSpd;
         }
-
-        if (targets != null)
+        
+        if(TowerType == (int)ConstructManager.ETowerType.Multi)
         {
             targets.Clear();
         }
@@ -389,6 +389,24 @@ public class Tower : MonoBehaviour
         if (fCurrCooltime > 0.0f)
         {
             fCurrCooltime -= 0.2f;
+        }
+        else if(isStart && fCurrCooltime <= 0)       // 타겟이 있고 쿨타임이 0보다 줄어들었다면
+        {
+            vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
+
+            if (TowerType != (int)ConstructManager.ETowerType.Normal)
+            {
+                SetTarget();
+
+                if (Target.Count != 0)
+                {
+                    MakeBullet(Target);
+                }
+            }
+            else
+            {
+                MakeBullet(null);
+            }
         }
         StartCoroutine("AttackTimer");
     }
