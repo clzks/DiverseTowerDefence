@@ -398,7 +398,7 @@ public class Tower : MonoBehaviour
             {
                 SetTarget();
 
-                if (Target.Count != 0)
+                if (Target.Count != 0 && Target[0] != null)
                 {
                     MakeBullet(Target);
                 }

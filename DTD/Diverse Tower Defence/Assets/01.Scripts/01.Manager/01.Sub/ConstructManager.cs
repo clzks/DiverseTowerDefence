@@ -119,10 +119,11 @@ public class ConstructManager : MonoBehaviour
     // ========================= 건설관련  =================================================== //
     public List<int> towerDeckList = new List<int>();
     public List<GroundInfo> groundInfoList = new List<GroundInfo>();
-    public int nGroundNum = 4;
+    public int nGroundNum = 48;
     private GameObject target;
     public Dictionary<int, GameObject> UserTowerDic = new Dictionary<int, GameObject>();        // 현재 건설된 타워들 (GroundIndex, Tower)
-
+    public GameObject TowerLabel;                                                                      // 타워에 사용할 라벨
+    public List<GameObject> LabelList = new List<GameObject>();
     // =============================================================================================== //
     private static object _Lock = new object();
     public static ConstructManager instance = null;
@@ -173,11 +174,14 @@ public class ConstructManager : MonoBehaviour
 
     private void Start()
     {
+        LoadTowerInfoLabel();
+
         LoadTowerModel();
 
         SetTowerStatus();
 
         SetGroundInfo();
+
     }
 #if DEBUG
     private void Update()
@@ -295,6 +299,11 @@ public class ConstructManager : MonoBehaviour
         GameObject go = new GameObject();
         go = Resources.Load<GameObject>("Tower");
         towerModelList.Add(go);
+    }
+
+    private void LoadTowerInfoLabel()
+    {
+        TowerLabel = Resources.Load<GameObject>("Label/ConstructInfoLabel");
     }
 
     private void SetTowerStatus()

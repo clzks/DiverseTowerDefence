@@ -30,7 +30,7 @@ public class StageManager : MonoBehaviour
     //private UILabel lbTower1Info;
     //private UILabel lbTower2Info;
     //private UILabel lbTower3Info;
-    private List<UILabel> listLbTowerInfo = new List<UILabel>();
+    //private List<UILabel> listLbTowerInfo = new List<UILabel>();
 
     // ============================================= \\ 
 
@@ -207,11 +207,19 @@ public class StageManager : MonoBehaviour
         life = GameObject.Find("UI Root/Camera/Life").GetComponent<UILabel>();
         StageNumber = GameObject.Find("UI Root/Camera/StageNumber").GetComponent<UILabel>();
         EnemyManager.Instance.BarParent = GameObject.Find("UI Root/Camera/ProgressBar").transform;
-        for (int i = 0; i < 4; ++i)
+        //for (int i = 0; i < 4; ++i)
+        //{
+        //    UILabel lb = GameObject.Find("UI Root/Camera/ConstructInfo/" + i.ToString()).GetComponent<UILabel>();
+        //    listLbTowerInfo.Add(lb);
+        //}
+        for (int i = 0; i < ConstructManager.Instance.nGroundNum; ++i)
         {
-            UILabel lb = GameObject.Find("UI Root/Camera/ConstructInfo/" + i.ToString()).GetComponent<UILabel>();
-            listLbTowerInfo.Add(lb);
+            GameObject g = Instantiate(ConstructManager.Instance.TowerLabel, GameObject.Find("UI Root/Camera/ConstructInfo").transform);
+            //UILabel Label = g.GetComponent<UILabel>();
+            //Label.transform.parent = GameObject.Find("UI Root/Camera/ConstructInfo").transform;
+            ConstructManager.Instance.LabelList.Add(g);
         }
+
 
         isSetLabel = true;
     }
@@ -225,16 +233,16 @@ public class StageManager : MonoBehaviour
             StageNumber.text = (nStage+1).ToString();
 
 #if DEBUG
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < ConstructManager.Instance.nGroundNum; ++i)
             {
                if (ConstructManager.Instance.groundInfoList[i].TowerIndex != -1)
                {
                    Tower t = ConstructManager.Instance.UserTowerDic[i].GetComponent<Tower>();
-                   listLbTowerInfo[i].text = t.Name + "\r\n레벨 : " + t.Level.ToString() + "\r\n공격력 : " + t.Attack.ToString() + "\r\n업글 : " + t.CurrUpgradeNum.ToString();
+                   ConstructManager.Instance.LabelList[i].GetComponent<UILabel>().text = t.Name + "\r\n레벨 : " + t.Level.ToString() + "\r\n공격력 : " + t.Attack.ToString() + "\r\n업글 : " + t.CurrUpgradeNum.ToString();
                }
                else
                {
-                   listLbTowerInfo[i].text = "타워 없음";
+                    ConstructManager.Instance.LabelList[i].GetComponent<UILabel>().text = "타워 없음";
                }
             }
 #endif
