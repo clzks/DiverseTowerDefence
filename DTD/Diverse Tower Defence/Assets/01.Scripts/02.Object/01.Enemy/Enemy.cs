@@ -19,10 +19,12 @@ public class Enemy : MonoBehaviour
     public int CurrDotLevel;
 
     public float Max_HP;
+    public Vector3 vDir = new Vector3();
+    public int nNode = 0;
 
     public UISlider ProgressBar;        // 체력바
     public Vector2 ProgressBar_Size;
-    
+    public Transform EnemyTransform;
 
     public void Start()
     {
@@ -30,6 +32,12 @@ public class Enemy : MonoBehaviour
         ProgressBar = Go.GetComponent<UISlider>();
         ProgressBar_Size.x = Go.GetComponentInChildren<UISprite>().width ;
         ProgressBar_Size.y = Go.GetComponentInChildren<UISprite>().height;
+        EnemyTransform = transform.parent;
+    }
+
+    public void Update()
+    {
+        EnemyTransform.position += vDir * GameManager.Instance.nGameSpeed * Time.deltaTime * 5.0f;
     }
 
     public void SetEnemy(EnemyStatus es, int id)

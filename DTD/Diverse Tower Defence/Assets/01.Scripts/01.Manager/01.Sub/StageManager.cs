@@ -13,7 +13,6 @@ public class StageManager : MonoBehaviour
 
     public int nStage = 0;
     public List<Vector3> vNodeList = new List<Vector3>();         // 각각의 노드
-
     // ============================================ \\ 
 
 
@@ -106,7 +105,7 @@ public class StageManager : MonoBehaviour
                     {
                         if (EnemyManager.Instance.nPoolIndex < 40)
                         {
-                            EnemyManager.Instance.ResponeEnemy(nStage, 2.0f, EnemyManager.Instance.trNodeList[0].position);
+                            EnemyManager.Instance.ResponeEnemy(nStage, 2.0f, EnemyManager.Instance.MonsterRouteList[0][0].position);
                         }
                         else
                         {
@@ -115,7 +114,7 @@ public class StageManager : MonoBehaviour
                     }
                     else // 보스 젠
                     {
-                        EnemyManager.Instance.ResponeBoss(nStage / 10, EnemyManager.Instance.trNodeList[0].position);
+                        EnemyManager.Instance.ResponeBoss(nStage / 10, EnemyManager.Instance.MonsterRouteList[0][0].position);
                         nPhase = 2;
                     }
                     EnemyManager.Instance.RunEnemy();

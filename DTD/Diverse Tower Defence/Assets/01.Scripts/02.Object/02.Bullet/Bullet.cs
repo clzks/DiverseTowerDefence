@@ -154,16 +154,16 @@ public class Bullet : MonoBehaviour
         if (nAttackType != (int)ConstructManager.EAttackType.Laser)
         {
             vDir.y = 0.0f;
-            transform.position += fSpeed * vDir * 0.1f * GameManager.Instance.nGameSpeed;
+            transform.position += fSpeed * vDir * 0.5f * GameManager.Instance.nGameSpeed;
             transform.rotation = Quaternion.LookRotation(vDir);                 // 아주 좋구연
         }
         else
         {
             vDir.y = 0.0f;
-            HitPoint.transform.position += fSpeed * vDir * 0.1f * GameManager.Instance.nGameSpeed;
+            HitPoint.transform.position += fSpeed * vDir * 0.5f * GameManager.Instance.nGameSpeed;
             LaserBody.transform.rotation = Quaternion.LookRotation(vDir);
-            LaserBody.transform.localScale += new Vector3(0, 0, 1) *fSpeed * 0.1f * GameManager.Instance.nGameSpeed;
-            LaserBody.transform.position += fSpeed * vDir * 0.05f * GameManager.Instance.nGameSpeed;
+            LaserBody.transform.localScale += new Vector3(0, 0, 1) *fSpeed * 0.5f * GameManager.Instance.nGameSpeed;
+            LaserBody.transform.position += fSpeed * vDir * 0.25f * GameManager.Instance.nGameSpeed;
         }
     }
 

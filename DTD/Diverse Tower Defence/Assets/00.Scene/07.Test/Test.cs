@@ -4,20 +4,15 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public Camera camera;
 
     private void Start()
     {
-        camera = Camera.main;
+        
         ConstructManager.Instance.MainCamera = Camera.main;
         for (int i = 0; i < ConstructManager.Instance.nGroundNum; ++i)
         {
             ConstructManager.Instance.groundInfoList[i].position = GameObject.Find("Constructable Place/" + i.ToString()).transform.position;
         }
-
-        
-        
-
     }
 
     private void Update()
@@ -26,9 +21,11 @@ public class Test : MonoBehaviour
         {
             for (int i = 0; i < ConstructManager.Instance.nGroundNum; ++i)
             {
-                Vector3 ScreenPos = camera.WorldToScreenPoint(ConstructManager.Instance.groundInfoList[i].position);
-                ConstructManager.Instance.LabelList[i].GetComponent<UILabel>().transform.position = ConstructManager.Instance.groundInfoList[i].position;
-                //ConstructManager.Instance.LabelList[i].GetComponent<UILabel>().transform.loo
+                Vector3 ScreenPos = Camera.main.WorldToViewportPoint(ConstructManager.Instance.groundInfoList[i].position);
+                ScreenPos = UICamera.mainCamera.ViewportToWorldPoint(ScreenPos);
+                ScreenPos.z = 0.0f;
+                UILabel label = ConstructManager.Instance.LabelList[i].GetComponent<UILabel>();
+                label.transform.position = ScreenPos;
             }
         }
     }

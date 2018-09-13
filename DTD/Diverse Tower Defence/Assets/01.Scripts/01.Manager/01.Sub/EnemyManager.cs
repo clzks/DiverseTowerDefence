@@ -49,10 +49,12 @@ public class EnemyManager : MonoBehaviour
 
     // ========================= 적의 이동경로 ==========================
     public List<Transform> trNodeList = new List<Transform>();
-    public int nNodeNum = 2; // 최대 노드 수 
+    public int nNodeNum = 24; // 최대 노드 수 
+    public List<List<Transform>> MonsterRouteList = new List<List<Transform>>();
+
     // =================================================================
 
-  
+
     // =========================== 몬스터 풀 ===========================
     public List<GameObject> EnemyPool = new List<GameObject>();
     public List<GameObject> EnemyModelPool = new List<GameObject>();
@@ -139,21 +141,23 @@ public class EnemyManager : MonoBehaviour
     {
         if (!isBossGen)
         {
+            int NodeNum = MonsterRouteList[0].Count;
             for (int i = 0; i < nPoolNum; ++i)
             {
                 if (EnemyPool[i].activeSelf)
                 {
-                    Enemy enem = EnemyModelPool[i].GetComponent<Enemy>();
-                    EnemyPool[i].transform.position += new Vector3(-3.0f * GameManager.Instance.nGameSpeed , 0, 0) * Time.deltaTime;
-                    if ((EnemyPool[i].transform.position - trNodeList[1].position).magnitude <= 0.1f && EnemyPool[i].activeSelf)   // 몹이 지나가면
-                    {
-                        EnemyPool[i].SetActive(false);
-                        
-                        Destroy(EnemyModelPool[i].gameObject);
-                        StageManager.Instance.nLife -= 1;
-                        Destroy(enem.ProgressBar.gameObject);
-                        //enem.StepOnGoalLine();
-                    }
+                    //Enemy enem = EnemyModelPool[i].GetComponent<Enemy>();
+                    //EnemyPool[i].transform.position += new Vector3(-3.0f * GameManager.Instance.nGameSpeed , 0, 0) * Time.deltaTime;
+                    NodeToNodeMove(0, EnemyModelPool[i], NodeNum, i);
+                    
+                    //if ((EnemyPool[i].transform.position - trNodeList[1].position).magnitude <= 0.1f && EnemyPool[i].activeSelf)   // 몹이 지나가면
+                    //{
+                    //    EnemyPool[i].SetActive(false);
+                    //    
+                    //    Destroy(EnemyModelPool[i].gameObject);
+                    //    StageManager.Instance.nLife -= 1;
+                    //    Destroy(enem.ProgressBar.gameObject);
+                    //}
                 }
             }
         }
@@ -231,6 +235,41 @@ public class EnemyManager : MonoBehaviour
         {
             trNodeList.Add(GameObject.Find("MonsterRoute/Node" + i.ToString()).transform);
         }
+
+        List<Transform> MonsterRoute = new List<Transform>();
+        MonsterRoute.Add(trNodeList[6]);
+        MonsterRoute.Add(trNodeList[10]);
+        MonsterRoute.Add(trNodeList[5]);
+        MonsterRoute.Add(trNodeList[4]);
+        MonsterRoute.Add(trNodeList[20]);
+        MonsterRoute.Add(trNodeList[21]);
+        MonsterRoute.Add(trNodeList[16]);
+        MonsterRoute.Add(trNodeList[13]);
+        MonsterRoute.Add(trNodeList[18]);
+        MonsterRoute.Add(trNodeList[19]);
+        MonsterRoute.Add(trNodeList[0]);
+        MonsterRouteList.Add(MonsterRoute);
+    }
+
+    public void NodeToNodeMove(int RouteListIndex, GameObject g, int NodeIndexNum, int MonsterIndex)
+    {
+        Enemy e = g.GetComponentInChildren<Enemy>();
+
+        
+        if((g.transform.position - MonsterRouteList[RouteListIndex][e.nNode].position).magnitude <= 0.1f * GameManager.Instance.nGameSpeed)
+        {
+            e.vDir = (MonsterRouteList[RouteListIndex][e.nNode + 1].position - MonsterRouteList[RouteListIndex][e.nNode].position).normalized;
+            e.nNode++;
+        }
+        if(e.nNode == NodeIndexNum)
+        {
+            EnemyPool[MonsterIndex].SetActive(false);
+
+            Destroy(EnemyModelPool[MonsterIndex].gameObject);
+            StageManager.Instance.nLife -= 1;
+            Destroy(e.ProgressBar.gameObject);
+        }
+
     }
 
     public void LoadModelList()
