@@ -267,9 +267,9 @@ public class ConstructManager : MonoBehaviour
                 if (n == i) // 같은자리는 검색할 필요 없음
                     continue;
 
-                if (groundInfoList[n].TowerIndex == TowerIndex)
+                if (groundInfoList[n].TowerIndex == TowerIndex)     // 
                     TIsame = true;
-                if (groundInfoList[n].TowerLevel == Level)
+                if (groundInfoList[n].TowerLevel == Level)          // 
                     LVsame = true;
 
                 if (TIsame && LVsame)
@@ -283,6 +283,7 @@ public class ConstructManager : MonoBehaviour
                     t.SetTowerStatus(towerStatusDic[towerTypeList[groundInfoList[i].TowerIndex].TowerName][groundInfoList[i].TowerLevel], groundInfoList[i].TowerIndex, i);
                     Destroy(UserTowerDic[n].gameObject);
                     UserTowerDic.Remove(n);
+                    break;
                 }
             }
             if (!isSearch)

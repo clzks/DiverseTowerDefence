@@ -13,6 +13,8 @@ public class Bullet : MonoBehaviour
     public int nEffectId;     // ??? 뭔디 아마도 이펙트에 id값을 줘서 불러올라고 했던것같음 (파티클) 
     public bool doDamaged;    // 피해를 주었는가?
 
+    public float BulletSpd = 0.05f;
+
     // 총알의 스탯
     public float fAttack;
     public int nTowerType;
@@ -133,7 +135,7 @@ public class Bullet : MonoBehaviour
             }
             vDestination = Target.transform.position;
 
-            if (Vector3.Dot(vDir, vDestination) < 0)
+            if (Vector3.Dot(vDir, (vDestination - transform.position).normalized) < 0)
             {
                 if (nTowerType != (int)ConstructManager.ETowerType.AoE)
                 {
@@ -149,7 +151,7 @@ public class Bullet : MonoBehaviour
         else
         {
             //vDir = Vector3.Normalize(vDestination - transform.position);        // 방향을 계속 설정한다. 타깃이 죽은 후라도
-            if(Vector3.Dot(vDir, vDestination) < 0)
+            if(Vector3.Dot(vDir, vDestination - transform.position) < 0)
             {
                 if (nTowerType != (int)ConstructManager.ETowerType.AoE)
                 {
@@ -179,7 +181,7 @@ public class Bullet : MonoBehaviour
         if (nAttackType != (int)ConstructManager.EAttackType.Laser)
         {
             vDir.y = 0.0f;
-            transform.position += fSpeed * vDir * 0.5f * GameManager.Instance.nGameSpeed;
+            transform.position += fSpeed * vDir * BulletSpd * GameManager.Instance.nGameSpeed;
             transform.rotation = Quaternion.LookRotation(vDir);                 // 아주 좋구연
         }
         else
@@ -187,7 +189,7 @@ public class Bullet : MonoBehaviour
             vDir.y = 0.0f;
             HitPoint.transform.position += fSpeed * vDir * 0.5f * GameManager.Instance.nGameSpeed;
             LaserBody.transform.rotation = Quaternion.LookRotation(vDir);
-            LaserBody.transform.localScale += new Vector3(0, 0, 1) *fSpeed * 0.5f * GameManager.Instance.nGameSpeed;
+            LaserBody.transform.localScale += new Vector3(0, 0, 1) *fSpeed * BulletSpd * GameManager.Instance.nGameSpeed;
             LaserBody.transform.position += fSpeed * vDir * 0.25f * GameManager.Instance.nGameSpeed;
         }
     }

@@ -270,6 +270,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        Destroy(ProgressBar.gameObject);
+    }
+
     //public void StepOnGoalLine()
     //{
     //    StageManager.Instance.nLife -= 1;
