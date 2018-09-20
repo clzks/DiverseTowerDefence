@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33811018909180248}
   - component: {fileID: 23908597044045108}
   - component: {fileID: 65646401693339050}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33089415159706682}
   - component: {fileID: 23292679500686620}
   - component: {fileID: 65746638853687396}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 33714338674691034}
   - component: {fileID: 23877131141969946}
   - component: {fileID: 65128274103034974}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -8,11 +8,12 @@ public class StageManager : MonoBehaviour
   
     public bool isGameStart = false;
     public int nLife = 100;
+    public int nNodeNum = 24; // 최대 노드 수 
 
     // ========== 스테이지 세팅 관련 =============== \\
 
     public int nStage = 0;
-    public List<Vector3> vNodeList = new List<Vector3>();         // 각각의 노드
+    public List<Transform> trNodeList = new List<Transform>();         // 각각의 노드
     // ============================================ \\ 
 
 
@@ -70,6 +71,15 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        for (int i = 0; i < nNodeNum; ++i)
+        {
+            trNodeList.Add(GameObject.Find("MonsterRoute/Node" + i.ToString()).transform);
+        }
+
+    }
+
     private void Update()
     {
         if (isSetSpot && isGameStart)
@@ -100,12 +110,12 @@ public class StageManager : MonoBehaviour
                     }
                 break;
 
-                case 1:
+                case 1: // ResponseEnemy 할때 살짝 더러운 느낌 
                     if (nStage % 10 != 9)
                     {
                         if (EnemyManager.Instance.nPoolIndex < 40)
                         {
-                            EnemyManager.Instance.ResponeEnemy(nStage, 2.0f, EnemyManager.Instance.MonsterRouteList[0][0].position);
+                            EnemyManager.Instance.ResponeEnemy(nStage, trNodeList[EnemyManager.Instance.MonsterRouteList[0][0]].position, 0);
                         }
                         else
                         {
@@ -114,14 +124,14 @@ public class StageManager : MonoBehaviour
                     }
                     else // 보스 젠
                     {
-                        EnemyManager.Instance.ResponeBoss(nStage / 10, EnemyManager.Instance.MonsterRouteList[0][0].position);
+                        EnemyManager.Instance.ResponeBoss(nStage / 10, trNodeList[EnemyManager.Instance.MonsterRouteList[0][0]].position, 0);
                         nPhase = 2;
                     }
-                    EnemyManager.Instance.RunEnemy();
+                    //EnemyManager.Instance.RunEnemy();
                     break;
 
                 case 2:
-                    EnemyManager.Instance.RunEnemy();
+                    //EnemyManager.Instance.RunEnemy();
                     if (EnemyManager.Instance.IsEliminate())
                     {
                         nPhase = 3;

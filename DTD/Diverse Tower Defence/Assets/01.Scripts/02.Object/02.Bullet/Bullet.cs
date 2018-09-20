@@ -132,12 +132,8 @@ public class Bullet : MonoBehaviour
                 vDir = Vector3.Normalize(Target.transform.transform.position - transform.position);
             }
             vDestination = Target.transform.position;
-        }
-        else
-        {
-            vDir = Vector3.Normalize(vDestination - transform.position);        // 방향을 계속 설정한다. 타깃이 죽은 후라도
 
-            if (Vector3.Distance(transform.position, vDestination) <= 0.05f)    // 타깃이 죽은 자리에 총알이 도달했을 때
+            if (Vector3.Dot(vDir, vDestination) < 0)
             {
                 if (nTowerType != (int)ConstructManager.ETowerType.AoE)
                 {
@@ -149,6 +145,35 @@ public class Bullet : MonoBehaviour
                     StartCoroutine("AoEAttack");                                // 장판 총알이면 장판데미지 코루틴 발동
                 }
             }
+        }
+        else
+        {
+            //vDir = Vector3.Normalize(vDestination - transform.position);        // 방향을 계속 설정한다. 타깃이 죽은 후라도
+            if(Vector3.Dot(vDir, vDestination) < 0)
+            {
+                if (nTowerType != (int)ConstructManager.ETowerType.AoE)
+                {
+                    DestroyBullet();                                            // 장판 총알이 아니라면 바로 삭제시키고
+                }
+                else
+                {
+                    //isAttackAoE = true;
+                    StartCoroutine("AoEAttack");                                // 장판 총알이면 장판데미지 코루틴 발동
+                }
+            }
+
+            //if (Vector3.Distance(transform.position, vDestination) <= 0.05f)    // 타깃이 죽은 자리에 총알이 도달했을 때
+            //{
+            //    if (nTowerType != (int)ConstructManager.ETowerType.AoE)
+            //    {
+            //        DestroyBullet();                                            // 장판 총알이 아니라면 바로 삭제시키고
+            //    }
+            //    else
+            //    {
+            //        //isAttackAoE = true;
+            //        StartCoroutine("AoEAttack");                                // 장판 총알이면 장판데미지 코루틴 발동
+            //    }
+            //}
         }
 
         if (nAttackType != (int)ConstructManager.EAttackType.Laser)

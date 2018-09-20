@@ -13,6 +13,9 @@ public class Enemy : MonoBehaviour
     public float Curr_HP;
     public float Speed;
     public int CurrNode;
+    public List<int> NodeList = new List<int>();
+    string CurrNodeName;
+    string NextNodeName;
 
     public int RemainDotTime;
     public float CurrDotDamage;
@@ -20,7 +23,8 @@ public class Enemy : MonoBehaviour
 
     public float Max_HP;
     public Vector3 vDir = new Vector3();
-    public int nNode = 0;
+    public Vector3 v = new Vector3();
+    public int nNodeNum;
 
     public UISlider ProgressBar;        // 체력바
     public Vector2 ProgressBar_Size;
@@ -37,10 +41,31 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
-        EnemyTransform.position += vDir * GameManager.Instance.nGameSpeed * Time.deltaTime * 5.0f;
+        EnemyTransform.position += vDir * GameManager.Instance.nGameSpeed * Time.deltaTime * 3.0f;
+
+        v = StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - EnemyTransform.position;
+
+        if (Vector3.Dot(vDir, v) < 0)
+        {
+            CurrNode++;
+            CurrNodeName = "Node" + NodeList[CurrNode].ToString();
+            if (CurrNode <= nNodeNum - 2)
+            {
+                NextNodeName = "Node" + NodeList[CurrNode + 1].ToString();
+                vDir = (StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - StageManager.Instance.trNodeList[NodeList[CurrNode]].transform.position).normalized;
+            }
+            else
+            {
+                EnemyManager.Instance.EnemyPool[Id].SetActive(false);
+                StageManager.Instance.nLife -= 1;
+                Destroy(ProgressBar.gameObject);
+        
+                Destroy(gameObject);
+            }
+        }
     }
 
-    public void SetEnemy(EnemyStatus es, int id)
+    public void SetEnemy(EnemyStatus es, int id, List<int> Routelist)
     {
 
         Id = id;
@@ -52,6 +77,12 @@ public class Enemy : MonoBehaviour
         RemainDotTime = es.nRemainDotTime;
         CurrDotDamage = es.fCurrDotDamage;
         CurrDotLevel = 0;
+        NodeList = Routelist;
+        nNodeNum = Routelist.Count;
+        CurrNodeName = "Node" + NodeList[CurrNode].ToString();
+        NextNodeName = "Node" + NodeList[CurrNode + 1].ToString();
+        // 다음 노드와 현재 노드의 벡터차를 노멀라이즈 한 것이 방향, 노드의 트랜스폼은 StageManager가 가지고 있다.
+        vDir = (StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - StageManager.Instance.trNodeList[NodeList[CurrNode]].transform.position).normalized;
     }
 
     public void Damage(float f) // 기본피해
@@ -217,11 +248,33 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void StepOnGoalLine()
+    private void OnTriggerEnter(Collider other)
     {
-        StageManager.Instance.nLife -= 1;
-        GameObject Go = GetComponent<GameObject>();
-        Destroy(this.gameObject);
-        Go.SetActive(false);
+        if (other.name == NextNodeName)
+        {
+            CurrNode++;
+            CurrNodeName = "Node" + NodeList[CurrNode].ToString();
+            if (CurrNode <= nNodeNum - 2)
+            {
+                NextNodeName = "Node" + NodeList[CurrNode + 1].ToString();
+                vDir = (StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - StageManager.Instance.trNodeList[NodeList[CurrNode]].transform.position).normalized;
+            }
+            else
+            {
+                EnemyManager.Instance.EnemyPool[Id].SetActive(false);
+                StageManager.Instance.nLife -= 1;
+                Destroy(ProgressBar.gameObject);
+
+                Destroy(gameObject);
+            }
+        }
     }
+
+    //public void StepOnGoalLine()
+    //{
+    //    StageManager.Instance.nLife -= 1;
+    //    GameObject Go = GetComponent<GameObject>();
+    //    Destroy(this.gameObject);
+    //    Go.SetActive(false);
+    //}
 }

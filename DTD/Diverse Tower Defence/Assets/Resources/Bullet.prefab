@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4819994684650788}
   - component: {fileID: 136939361510049704}
   - component: {fileID: 54171169730837182}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4094668707612618}
   - component: {fileID: 33096711832694726}
   - component: {fileID: 23320840120661308}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4659910433888962}
   - component: {fileID: 33789386994964216}
   - component: {fileID: 23263837024153922}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}

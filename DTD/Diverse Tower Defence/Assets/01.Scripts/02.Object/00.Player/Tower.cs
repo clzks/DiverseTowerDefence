@@ -101,7 +101,7 @@ public class Tower : MonoBehaviour
         {
             if (Target.Count == 0) // 타겟이 없으면 타깃을 설정한다
             {
-                Collider[] cols = Physics.OverlapSphere(transform.position, Range);
+                Collider[] cols = Physics.OverlapSphere(transform.position, Range, 1 << 15);
                 
                 float fRealRange = float.MaxValue;
                 GameObject target = null;

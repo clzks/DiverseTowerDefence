@@ -6,6 +6,7 @@ TagManager:
   tags:
   - TowerPlace
   - Enemy
+  - Node
   layers:
   - Default
   - TransparentFX
@@ -21,10 +22,10 @@ TagManager:
   - 
   - SampleMap
   - 
-  - 
-  - 
-  - 
-  - 
+  - Tower
+  - Enemy
+  - Bullet
+  - Node
   - 
   - 
   - 

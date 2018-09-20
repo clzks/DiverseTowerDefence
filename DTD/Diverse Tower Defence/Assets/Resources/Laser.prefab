@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4446994076528612}
   - component: {fileID: 54159618609160146}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 4785899887865100}
   - component: {fileID: 33891243679102856}
   - component: {fileID: 23847035033539022}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: LaserBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 33597109789520596}
   - component: {fileID: 23928423197129974}
   - component: {fileID: 135787475349780810}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: HitPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -269,7 +269,7 @@ public class BulletTest : MonoBehaviour
                 goEnemy = Instantiate(EnemyManager.Instance.EnemyModelList[1]);
                 goEnemy.AddComponent<Enemy>();
                 Enemy e = goEnemy.GetComponent<Enemy>();
-                e.SetEnemy(EnemyManager.Instance.EnemyStatusList[0], nEnemyId);
+                e.SetEnemy(EnemyManager.Instance.EnemyStatusList[0], nEnemyId, new List<int>());
                 goEnemy.transform.position = goEnemyAlpha.transform.position;
                 goEnemy.name = "Enemy" + nEnemyId.ToString();
                 nEnemyId++;
