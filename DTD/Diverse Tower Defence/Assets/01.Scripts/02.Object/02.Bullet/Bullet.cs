@@ -473,17 +473,20 @@ public class Bullet : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        switch (nAttackType)
+        if (GameManager.Instance.nCurrentScene == 2)
         {
-            case 5:
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere(transform.position, 4.0f);
-                break;
+            switch (nAttackType)
+            {
+                case 5:
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawWireSphere(transform.position, 4.0f);
+                    break;
 
-            case 4:
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere(transform.position, fSplashRange);
-                break;
+                case 4:
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawWireSphere(transform.position, fSplashRange);
+                    break;
+            }
         }
     }
 }

@@ -41,9 +41,10 @@ public class EnemyManager : MonoBehaviour
 
 
 
-    // ====================== 몬스터 젠 속도 =============================
+    // ======================    몬스터 젠   =============================
     private float fTimer = 1.5f;  // 젠속도
     private float fCurrTimer = 0; // 사이클 돌릴 시간
+    //public int nWaveMonsterNum = 20;
     // ==================================================================
 
 
@@ -59,7 +60,7 @@ public class EnemyManager : MonoBehaviour
     public List<GameObject> EnemyPool = new List<GameObject>();
     public List<GameObject> EnemyModelPool = new List<GameObject>();
     public GameObject Boss;                      // 보스전용 오브젝트도 하나 만드네 ㅋ 
-    public int nPoolNum = 40;                    // 최대 풀링 갯수
+    public int nPoolNum = 20;                    // 최대 풀링 갯수
     public int nMadeMonsterNumber = 0;           // 생성된 몬스터 숫자
     public int EliminatedNum = 0;                // 생성숫자랑 죽은숫자가 40일때 라운드가 끝난다고 해놓은것인데 이것도 맘에들진 않네요.. 
     public Transform tStartPosition;             // 적군 시작 위치.
@@ -218,7 +219,7 @@ public class EnemyManager : MonoBehaviour
     
     public void TakeDamage(int damage)
     {
-        for(int i = 0; i < 40; ++i)
+        for(int i = 0; i < nPoolNum; ++i)
         {
             if(EnemyPool[i].activeSelf)
             {
@@ -313,14 +314,14 @@ public class EnemyManager : MonoBehaviour
         if (!isBossGen) // 보스 라운드 아닐때
         {
             EliminatedNum = 0;
-            for (int i = 0; i < 40; ++i)
+            for (int i = 0; i < nPoolNum; ++i)
             {
                 if (EnemyPool[i].activeSelf == false)
                 {
                     EliminatedNum++;
                 }
             }
-            if (EliminatedNum == 40 && nMadeMonsterNumber == 40 && EnemyModelPool.Count != 0)
+            if (EliminatedNum == nPoolNum && nMadeMonsterNumber == nPoolNum && EnemyModelPool.Count != 0)
             {
                 //for (int i = 0; i < EnemyModelPool.Count; ++i)
                 //{

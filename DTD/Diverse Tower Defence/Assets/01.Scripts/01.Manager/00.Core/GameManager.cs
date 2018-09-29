@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
         get
         {
             lock(_Lock)
-
             {
                 if(instance == null)
                 {
@@ -62,6 +61,8 @@ public class GameManager : MonoBehaviour
         EnemyManager.Instance.LoadModelList();
 
         BulletManager.Instance.LoadModelList();
+
+      
     }
 
     private void FixedUpdate()

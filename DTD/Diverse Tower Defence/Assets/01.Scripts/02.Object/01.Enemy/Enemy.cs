@@ -272,7 +272,10 @@ public class Enemy : MonoBehaviour
 
     private void OnDestroy()
     {
-        Destroy(ProgressBar.gameObject);
+        if (ProgressBar != null)
+        {
+            Destroy(ProgressBar.gameObject);
+        }
     }
 
     //public void StepOnGoalLine()

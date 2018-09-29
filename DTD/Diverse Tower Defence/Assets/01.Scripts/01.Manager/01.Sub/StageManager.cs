@@ -73,11 +73,7 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < nNodeNum; ++i)
-        {
-            trNodeList.Add(GameObject.Find("MonsterRoute/Node" + i.ToString()).transform);
-        }
-
+        
     }
 
     private void Update()
@@ -113,7 +109,7 @@ public class StageManager : MonoBehaviour
                 case 1: // ResponseEnemy 할때 살짝 더러운 느낌 
                     if (nStage % 10 != 9)
                     {
-                        if (EnemyManager.Instance.nPoolIndex < 40)
+                        if (EnemyManager.Instance.nPoolIndex < EnemyManager.Instance.nPoolNum)
                         {
                             EnemyManager.Instance.ResponeEnemy(nStage, trNodeList[EnemyManager.Instance.MonsterRouteList[0][0]].position, 0);
                         }
@@ -127,11 +123,9 @@ public class StageManager : MonoBehaviour
                         EnemyManager.Instance.ResponeBoss(nStage / 10, trNodeList[EnemyManager.Instance.MonsterRouteList[0][0]].position, 0);
                         nPhase = 2;
                     }
-                    //EnemyManager.Instance.RunEnemy();
                     break;
 
                 case 2:
-                    //EnemyManager.Instance.RunEnemy();
                     if (EnemyManager.Instance.IsEliminate())
                     {
                         nPhase = 3;
@@ -257,6 +251,14 @@ public class StageManager : MonoBehaviour
 #endif
         }
     }
+    public void LoadNodeInfo()
+    {
+        for (int i = 0; i < nNodeNum; ++i)
+        {
+            trNodeList.Add(GameObject.Find("MonsterRoute/Node" + i.ToString()).transform);
+        }
+    }
+
     public void SetPool()
     {
         if (GameManager.Instance.nCurrentScene == 1 && !isSetSpot)   // 적군생성위치 세팅 및 이네미 풀 만들기
@@ -275,11 +277,11 @@ public class StageManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.R))         // 스테이지 넘기기
         {
-            if (EnemyManager.Instance.EliminatedNum != 40)
+            if (EnemyManager.Instance.EliminatedNum != EnemyManager.Instance.nPoolNum)
             {
-                EnemyManager.Instance.nPoolIndex = 40;
-                EnemyManager.Instance.nMadeMonsterNumber = 40;
-                EnemyManager.Instance.EliminatedNum = 40;
+                EnemyManager.Instance.nPoolIndex = EnemyManager.Instance.nPoolNum;
+                EnemyManager.Instance.nMadeMonsterNumber = EnemyManager.Instance.nPoolNum;
+                EnemyManager.Instance.EliminatedNum = EnemyManager.Instance.nPoolNum;
                 nStage++;
 
                 fWatingTime = 5.0f;

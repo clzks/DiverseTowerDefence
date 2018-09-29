@@ -371,15 +371,18 @@ public class Tower : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
+        if (GameManager.Instance.nCurrentScene == 2)
+        {
+            Gizmos.color = Color.red;
 
-        if (TowerType == (int)ConstructManager.ETowerType.Normal)
-        {
-            Gizmos.DrawWireSphere(transform.position, SplashRange);
-        }
-        else
-        {
-            Gizmos.DrawWireSphere(transform.position, Range);
+            if (TowerType == (int)ConstructManager.ETowerType.Normal)
+            {
+                Gizmos.DrawWireSphere(transform.position, SplashRange);
+            }
+            else
+            {
+                Gizmos.DrawWireSphere(transform.position, Range);
+            }
         }
     }
 

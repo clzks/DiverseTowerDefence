@@ -13,6 +13,7 @@ public class Test : MonoBehaviour
         {
             ConstructManager.Instance.groundInfoList[i].position = GameObject.Find("Constructable Place/" + i.ToString()).transform.position;
         }
+        StageManager.Instance.LoadNodeInfo();
     }
 
     private void Update()

@@ -276,6 +276,10 @@ public class ConstructManager : MonoBehaviour
                 {
                     isSearch = true;
                     groundInfoList[i].TowerLevel += 1;  // 클릭한 지역의 타워 레벨은 1업~
+
+                    int r = Random.Range(0, 7);
+                    groundInfoList[i].TowerIndex = towerDeckList[r];
+
                     groundInfoList[n].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
                     groundInfoList[n].TowerLevel = -1;
 
