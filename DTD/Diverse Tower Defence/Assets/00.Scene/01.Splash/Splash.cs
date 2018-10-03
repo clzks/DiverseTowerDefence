@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class Splash : MonoBehaviour
 {
+    private void Start()
+    {
+        DeckManager.Instance.Init();
+    }
+
     private void Update()
     {
         //if(Input.GetKey(KeyCode.Alpha1))

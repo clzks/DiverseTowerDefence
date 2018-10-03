@@ -244,6 +244,7 @@ GameObject:
   - component: {fileID: 1569140660}
   - component: {fileID: 1569140659}
   - component: {fileID: 1569140661}
+  - component: {fileID: 1569140662}
   m_Layer: 0
   m_Name: Script
   m_TagString: Untagged
@@ -284,5 +285,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb180ecb184be124d997e90850a0e68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ruby: 0
+  TowerDeckList: 
+  PossesTowerList: 
+  PlayNum: 0
+  HighestStage: 0
+  ClearCount: 0
+--- !u!114 &1569140662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1569140658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 816a131d6d15f4645b579d8517259ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

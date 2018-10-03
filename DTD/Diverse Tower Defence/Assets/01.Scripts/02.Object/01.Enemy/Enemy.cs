@@ -37,6 +37,18 @@ public class Enemy : MonoBehaviour
         ProgressBar_Size.x = Go.GetComponentInChildren<UISprite>().width ;
         ProgressBar_Size.y = Go.GetComponentInChildren<UISprite>().height;
         EnemyTransform = transform.parent;
+
+        Vector3 ScreenPos = Camera.main.WorldToScreenPoint(this.transform.parent.position);
+        ScreenPos.z = 0.0f;
+        ScreenPos.x -= ProgressBar_Size.x * 0.5f;
+        ScreenPos.y += ProgressBar_Size.y * 0.5f;
+        Vector3 viewPos = Camera.main.ScreenToViewportPoint(ScreenPos);
+        viewPos.z = 0.0f;
+        Vector3 uiScreenPos = UICamera.currentCamera.ScreenToWorldPoint(ScreenPos);
+        uiScreenPos.x -= 0.22f;
+        uiScreenPos.y += 0.13f;
+
+        ProgressBar.transform.position = uiScreenPos;
     }
 
     public void Update()

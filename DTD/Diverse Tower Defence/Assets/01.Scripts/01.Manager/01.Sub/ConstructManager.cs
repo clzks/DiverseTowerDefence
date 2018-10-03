@@ -117,7 +117,7 @@ public class ConstructManager : MonoBehaviour
     // ============================================================================================== //
 
     // ========================= 건설관련  =================================================== //
-    public List<int> towerDeckList = new List<int>();
+    //public List<int> UserDataManager.Instance.TowerDeckList = new List<int>();
     public List<GroundInfo> groundInfoList = new List<GroundInfo>();
     public int nGroundNum = 48;
     private GameObject target;
@@ -178,7 +178,7 @@ public class ConstructManager : MonoBehaviour
 
         LoadTowerModel();
 
-        SetTowerStatus();
+        //SetTowerStatus();
 
         SetGroundInfo();
 
@@ -190,7 +190,7 @@ public class ConstructManager : MonoBehaviour
         {
             if (GameManager.Instance.nCurrentScene == 1)
             {
-#if UNITY_EDITOR
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     target = GetClickedObject();
@@ -200,6 +200,19 @@ public class ConstructManager : MonoBehaviour
                         {
                             int GroundIndex = System.Convert.ToInt32(target.name);
                             ConstructTower(GroundIndex);
+                        }
+                    }
+                }
+#if UNITY_EDITOR
+                if (Input.GetMouseButtonDown(1))
+                {
+                    target = GetClickedObject();
+                    if (target != null)
+                    {
+                        if (target.tag == "TowerPlace")
+                        {
+                            int GroundIndex = System.Convert.ToInt32(target.name);
+                            DestructTower(GroundIndex);
                         }
                     }
                 }
@@ -239,9 +252,9 @@ public class ConstructManager : MonoBehaviour
     {
         if (groundInfoList[i].TowerIndex == -1)  // 타워가 건설되어 있지 않을 때
         {
-            int r = Random.Range(0, 7);
+            int r = Random.Range(0, 8);
 
-            groundInfoList[i].TowerIndex = towerDeckList[r];
+            groundInfoList[i].TowerIndex = UserDataManager.Instance.TowerDeckList[r];
             groundInfoList[i].TowerLevel = 0;
 
             GameObject goTower = Instantiate(towerModelList[0]);
@@ -278,7 +291,7 @@ public class ConstructManager : MonoBehaviour
                     groundInfoList[i].TowerLevel += 1;  // 클릭한 지역의 타워 레벨은 1업~
 
                     int r = Random.Range(0, 7);
-                    groundInfoList[i].TowerIndex = towerDeckList[r];
+                    groundInfoList[i].TowerIndex = UserDataManager.Instance.TowerDeckList[r];
 
                     groundInfoList[n].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
                     groundInfoList[n].TowerLevel = -1;
@@ -294,10 +307,14 @@ public class ConstructManager : MonoBehaviour
                 print("같은 종류의 타워를 찾을 수 없습니다");
         }
     }
-    public void SetTowerDecks()
+    private void DestructTower(int i)
     {
-
+        groundInfoList[i].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
+        groundInfoList[i].TowerLevel = -1;
+        Destroy(UserTowerDic[i].gameObject);
+        UserTowerDic.Remove(i);
     }
+
 
     private void LoadTowerModel()
     {
@@ -311,17 +328,7 @@ public class ConstructManager : MonoBehaviour
         TowerLabel = Resources.Load<GameObject>("Label/ConstructInfoLabel");
     }
 
-    private void SetTowerStatus()
-    {
-        towerDeckList.Add(0);
-        towerDeckList.Add(2);
-        towerDeckList.Add(3);
-        towerDeckList.Add(4);
-        towerDeckList.Add(6);
-        towerDeckList.Add(8);
-        towerDeckList.Add(9);
-        towerDeckList.Add(11);
-    }
+    
 
     private void SetGroundInfo()
     {
@@ -338,7 +345,7 @@ public class ConstructManager : MonoBehaviour
     // 코루틴 . 디비파싱
     public void TowerStatusDbParsing(string p)
     {
-
+        
         string Filepath = Application.persistentDataPath + "/" + p;
 
         if (!File.Exists(Filepath))
@@ -455,7 +462,6 @@ public class ConstructManager : MonoBehaviour
                 }
             }
         }
-
     }
 #else
 

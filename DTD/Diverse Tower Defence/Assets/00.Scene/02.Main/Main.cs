@@ -7,8 +7,8 @@ public class Main : MonoBehaviour
 {
     public void ClickNewGameScene()
     {
-        GameManager.Instance.nCurrentScene = 1;
-        SceneManager.LoadScene("Test");
+        GameManager.Instance.nCurrentScene = 3;
+        SceneManager.LoadScene("DeckSetting");
     }
 
     public void ClickContinueScene()

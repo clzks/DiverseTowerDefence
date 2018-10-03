@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour
     public int nAttackType;
     public float fSplashRange;
     public float AoESustainTime;          // 광역총알의 남은 지속시간
-    public int nLife;
+    public float nLife;
     public int nBouncingNum;
     public int nCurrBouncingNum = 0;
     public int nDotTime;                  // Dot 지속시간
@@ -53,6 +53,15 @@ public class Bullet : MonoBehaviour
         if (nAttackType == (int)ConstructManager.EAttackType.Laser)
         {
             StartCoroutine("LaserAttack");
+        }
+    }
+
+    private void Start()
+    {
+        if(nAttackType == (int)ConstructManager.EAttackType.Laser)
+        {
+            vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);
+            LaserBody.transform.rotation = Quaternion.LookRotation(vDir);
         }
     }
 
@@ -125,19 +134,22 @@ public class Bullet : MonoBehaviour
 
         if (Target != null)
         {
-            if (GameManager.Instance.nCurrentScene == 1) // Test맵에서는 이네미가 상위 개체를 가지고 있어서 그
+            if (nAttackType != (int)ConstructManager.EAttackType.Laser)
             {
-                vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);
+                if (GameManager.Instance.nCurrentScene == 1) // Test맵에서는 이네미가 상위 개체를 가지고 있어서 그
+                {
+                    vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);
+                }
+                else if (GameManager.Instance.nCurrentScene == 2)   // BulletTest에서는 상위개체를 안가지고 있다.
+                {
+                    vDir = Vector3.Normalize(Target.transform.transform.position - transform.position);
+                }
+                vDestination = Target.transform.position;
             }
-            else if (GameManager.Instance.nCurrentScene == 2)   // BulletTest에서는 상위개체를 안가지고 있다.
-            {
-                vDir = Vector3.Normalize(Target.transform.transform.position - transform.position);
-            }
-            vDestination = Target.transform.position;
 
             if (Vector3.Dot(vDir, (vDestination - transform.position).normalized) < 0)
             {
-                if (nTowerType != (int)ConstructManager.ETowerType.AoE)
+                if (nTowerType != (int)ConstructManager.ETowerType.AoE && nTowerType != (int)ConstructManager.ETowerType.Laser)
                 {
                     DestroyBullet();                                            // 장판 총알이 아니라면 바로 삭제시키고
                 }
@@ -181,16 +193,16 @@ public class Bullet : MonoBehaviour
         if (nAttackType != (int)ConstructManager.EAttackType.Laser)
         {
             vDir.y = 0.0f;
-            transform.position += fSpeed * vDir * BulletSpd * GameManager.Instance.nGameSpeed;
-            transform.rotation = Quaternion.LookRotation(vDir);                 // 아주 좋구연
+            transform.position += fSpeed * vDir * GameManager.Instance.nGameSpeed * 0.3f;
+            transform.rotation = Quaternion.LookRotation(vDir); // 좋구연
         }
         else
         {
             vDir.y = 0.0f;
-            HitPoint.transform.position += fSpeed * vDir * 0.5f * GameManager.Instance.nGameSpeed;
-            LaserBody.transform.rotation = Quaternion.LookRotation(vDir);
-            LaserBody.transform.localScale += new Vector3(0, 0, 1) *fSpeed * BulletSpd * GameManager.Instance.nGameSpeed;
-            LaserBody.transform.position += fSpeed * vDir * 0.25f * GameManager.Instance.nGameSpeed;
+            HitPoint.transform.position += fSpeed * vDir * 1.0f * GameManager.Instance.nGameSpeed;
+            //LaserBody.transform.rotation = Quaternion.LookRotation(vDir);
+            LaserBody.transform.localScale += new Vector3(0, 0, 1) * fSpeed * GameManager.Instance.nGameSpeed * 1.0f;
+            LaserBody.transform.position += fSpeed * vDir * 0.5f * GameManager.Instance.nGameSpeed;
         }
     }
 
@@ -319,6 +331,10 @@ public class Bullet : MonoBehaviour
                 EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
             }
         }
+        else
+        {
+            Debug.Log("바보");
+        }
     }
 
     public void FindSplashTargets()
@@ -388,8 +404,8 @@ public class Bullet : MonoBehaviour
 
     public IEnumerator LaserAttack()
     {
-        nLife--;
-        yield return new WaitForSeconds(1.0f);
+        nLife -= 0.2f;
+        yield return new WaitForSeconds(0.2f);
         if(nLife <= 0)
         {
             DestroyBullet();
@@ -462,6 +478,10 @@ public class Bullet : MonoBehaviour
 
     public void DestroyBullet()
     {
+        //if (nAttackType == (int)ConstructManager.EAttackType.Laser) // SPlash
+        //{
+        //    Debug.Log("q바보");
+        //}
         if (nAttackType == (int)ConstructManager.EAttackType.Splash) // SPlash
         {
             FindSplashTargets();

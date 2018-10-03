@@ -6,21 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/00.Scene/07.Test/Test.unity
-    guid: d4e55128baebf3f47a4ad71d98d9008d
-  - enabled: 1
-    path: Assets/00.Scene/03.Game/Game.unity
-    guid: f07d300ec26b1054994cd525d0788062
-  - enabled: 1
-    path: Assets/00.Scene/00.Loading/Loading.unity
-    guid: f1e1aab07918b594086d6f125bd4f391
-  - enabled: 1
     path: Assets/00.Scene/01.Splash/Splash.unity
     guid: 539af91f6d83d8d41a002f82afb88fe2
   - enabled: 1
-    path: Assets/00.Scene/07.Test/BulletTest.unity
-    guid: 23d6b21821e8fa9419bc8f6bf8d01154
-  - enabled: 1
     path: Assets/00.Scene/02.Main/Main.unity
     guid: 65526e37f683e2d4f8f73cb59bec77e5
+  - enabled: 1
+    path: Assets/00.Scene/07.Test/DeckSetting.unity
+    guid: 86bec5f1e8c088a458d415a708b6b49c
+  - enabled: 1
+    path: Assets/00.Scene/07.Test/Test.unity
+    guid: d4e55128baebf3f47a4ad71d98d9008d
+  - enabled: 0
+    path: Assets/00.Scene/07.Test/BulletTest.unity
+    guid: 23d6b21821e8fa9419bc8f6bf8d01154
+  - enabled: 0
+    path: Assets/00.Scene/00.Loading/Loading.unity
+    guid: f1e1aab07918b594086d6f125bd4f391
+  - enabled: 0
+    path: Assets/00.Scene/03.Game/Game.unity
+    guid: f07d300ec26b1054994cd525d0788062
   m_configObjects: {}
