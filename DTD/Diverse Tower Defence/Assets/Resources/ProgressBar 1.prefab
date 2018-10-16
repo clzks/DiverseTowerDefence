@@ -240,6 +240,6 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114584142490058848, guid: 3ef3fadb026b16b4eb2d057ce38005b9, type: 2}
+  mAtlas: {fileID: 114747514965111646, guid: c948a81681ac00f4792b91117996e3b5, type: 2}
   mSpriteName: SF Button
   mFillCenter: 1

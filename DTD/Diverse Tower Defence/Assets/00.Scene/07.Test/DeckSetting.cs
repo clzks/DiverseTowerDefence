@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using System.IO;
 
 public class DeckSetting : MonoBehaviour
 {
@@ -16,12 +17,13 @@ public class DeckSetting : MonoBehaviour
     public List<UIPanel> DeckList = new List<UIPanel>();                // 덱 메이킹의 덱들
     public List<UIButton> PlayerDeckList = new List<UIButton>();        // 오른쪽에 나와있는 덱 선택용 즉, 임시적으로 선택된 덱들의 리스트라 할 수 있음
     public List<int> TempDeckList = new List<int>();
+
+    public UIPanel DeckInfo;
     /* 
     ============================ 덱 선택 ===================================
     - 덱 매니저의 SelectedDeckList가 갱신된다. (List의 최대 크기는 8)
     - SelectedDeckList를 갱샌 시킬때마다 PlayerDeckList도 같이 갱신된다. 
       (SDL의 크기에 따라 PDL의 Active와 라벨, 그림 업데이트 시킴)
-    
     ========================================================================
     */
     public void Start()
@@ -31,6 +33,7 @@ public class DeckSetting : MonoBehaviour
         TempDeckList = UserDataManager.Instance.TowerDeckList;
         PageTextUpdate();
         CurrDeckUpdate();
+        DeckInfo = GameObject.Find("UI Root/Camera/DeckInfo").GetComponent<UIPanel>();
     }
 
     //public void SetTowerDecks(List<int> deckIndexList)
@@ -104,7 +107,7 @@ public class DeckSetting : MonoBehaviour
         {
             TempDeckList.Add(TowerIndex);
         }
-
+        
         CurrDeckUpdate();
     }
 
@@ -117,7 +120,30 @@ public class DeckSetting : MonoBehaviour
 
     public void ClickDeckInfo()
     {
+        int SelectedDMIndex = Convert.ToInt32(UIButton.current.transform.parent.name);
+        int nCurrP = DeckManager.Instance.nCurrPage;
 
+        int TowerIndex = DeckManager.Instance.PossesTowerDeckList[nCurrP * 8 + SelectedDMIndex]; // 타워 자체의 인덱스
+
+        SetDeckInfo(TowerIndex);
+        DeckInfo.gameObject.SetActive(true);
+    }
+
+    public void ClickQuitDeckInfo()
+    {
+        DeckInfo.gameObject.SetActive(false);
+    }
+
+    private void SetDeckInfo(int towerIndex)
+    {
+        UILabel Explanation = GameObject.Find("UI Root/Camera/DeckInfo/Explanation").GetComponent<UILabel>();
+        UILabel Type = GameObject.Find("UI Root/Camera/DeckInfo/Type").GetComponent<UILabel>();
+        UILabel TowerName = GameObject.Find("UI Root/Camera/DeckInfo/TowerName").GetComponent<UILabel>();
+
+        TowerName.text = ConstructManager.Instance.towerTypeList[towerIndex].TowerName;
+        Type.text = ConstructManager.Instance.towerTypeList[towerIndex].TypeIndex.ToString();
+        Explanation.text = "";
+        
     }
 
     private void CurrDeckUpdate()

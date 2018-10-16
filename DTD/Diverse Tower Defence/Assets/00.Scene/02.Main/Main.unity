@@ -314,7 +314,7 @@ Transform:
   m_GameObject: {fileID: 82525509}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.3, y: 2.3, z: 1}
   m_Children:
   - {fileID: 483481292}
   - {fileID: 1755205555}
@@ -555,13 +555,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c5ecb5660b11414fb042fb826e03b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scalingStyle: 0
-  manualWidth: 1280
-  manualHeight: 720
+  scalingStyle: 2
+  manualWidth: 2960
+  manualHeight: 1600
   minimumHeight: 320
-  maximumHeight: 1536
-  fitWidth: 0
-  fitHeight: 1
+  maximumHeight: 1080
+  fitWidth: 1
+  fitHeight: 0
   adjustByDPI: 0
   shrinkPortraitUI: 0
 --- !u!4 &117082372
@@ -572,7 +572,7 @@ Transform:
   m_GameObject: {fileID: 117082368}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0027777778, y: 0.0027777778, z: 0.0027777778}
+  m_LocalScale: {x: 0.0012012012, y: 0.0012012012, z: 0.0012012012}
   m_Children:
   - {fileID: 364479183}
   m_Father: {fileID: 0}
@@ -700,7 +700,7 @@ Transform:
   m_GameObject: {fileID: 158367970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.3, y: 2.3, z: 1}
   m_Children:
   - {fileID: 1412210232}
   m_Father: {fileID: 364479183}
@@ -1358,7 +1358,7 @@ Transform:
   m_GameObject: {fileID: 1121841065}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.3, y: 2.3, z: 1}
   m_Children:
   - {fileID: 123958997}
   m_Father: {fileID: 364479183}

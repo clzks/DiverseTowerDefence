@@ -31,4 +31,8 @@ public class Test : MonoBehaviour
         }
     }
 
+    public void GameStart()
+    {
+        StageManager.Instance.isGameStart = true;
+    }
 }

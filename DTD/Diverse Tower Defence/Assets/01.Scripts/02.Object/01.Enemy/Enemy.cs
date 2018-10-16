@@ -38,17 +38,7 @@ public class Enemy : MonoBehaviour
         ProgressBar_Size.y = Go.GetComponentInChildren<UISprite>().height;
         EnemyTransform = transform.parent;
 
-        Vector3 ScreenPos = Camera.main.WorldToScreenPoint(this.transform.parent.position);
-        ScreenPos.z = 0.0f;
-        ScreenPos.x -= ProgressBar_Size.x * 0.5f;
-        ScreenPos.y += ProgressBar_Size.y * 0.5f;
-        Vector3 viewPos = Camera.main.ScreenToViewportPoint(ScreenPos);
-        viewPos.z = 0.0f;
-        Vector3 uiScreenPos = UICamera.currentCamera.ScreenToWorldPoint(ScreenPos);
-        uiScreenPos.x -= 0.22f;
-        uiScreenPos.y += 0.13f;
-
-        ProgressBar.transform.position = uiScreenPos;
+        SetEnemyProgressBar();
     }
 
     public void Update()
@@ -216,31 +206,11 @@ public class Enemy : MonoBehaviour
         
         if (GameManager.Instance.nCurrentScene == 2)
         {
-            Vector3 ScreenPos = Camera.main.WorldToScreenPoint(this.transform.position);
-            ScreenPos.z = 0.0f;
-            ScreenPos.x -= ProgressBar_Size.x * 0.5f;
-            ScreenPos.y += ProgressBar_Size.y * 0.5f;
-            Vector3 viewPos = Camera.main.ScreenToViewportPoint(ScreenPos);
-            viewPos.z = 0.0f;
-            Vector3 uiScreenPos = UICamera.currentCamera.ScreenToWorldPoint(ScreenPos);
-           //uiScreenPos.x -= 0.22f;
-           //uiScreenPos.y += 0.13f;
-           
-            ProgressBar.transform.position = uiScreenPos;
+            SetEnemyProgressBar();
         }
         else if(GameManager.Instance.nCurrentScene == 1)
         {
-            Vector3 ScreenPos = Camera.main.WorldToScreenPoint(this.transform.parent.position);
-            ScreenPos.z = 0.0f;
-            ScreenPos.x -= ProgressBar_Size.x * 0.5f;
-            ScreenPos.y += ProgressBar_Size.y * 0.5f;
-            Vector3 viewPos = Camera.main.ScreenToViewportPoint(ScreenPos);
-            viewPos.z = 0.0f;
-            Vector3 uiScreenPos = UICamera.currentCamera.ScreenToWorldPoint(ScreenPos);
-            uiScreenPos.x -= 0.22f;
-            uiScreenPos.y += 0.13f;
-
-            ProgressBar.transform.position = uiScreenPos;
+            SetEnemyProgressBar();
         }
 
         ProgressBar.value = Curr_HP / Max_HP;
@@ -288,6 +258,21 @@ public class Enemy : MonoBehaviour
         {
             Destroy(ProgressBar.gameObject);
         }
+    }
+
+    public void SetEnemyProgressBar()
+    {
+        Vector3 ScreenPos = Camera.main.WorldToScreenPoint(this.transform.parent.position);
+        ScreenPos.z = 0.0f;
+        ScreenPos.x -= ProgressBar_Size.x * 0.5f;
+        ScreenPos.y += ProgressBar_Size.y * 0.5f;
+        Vector3 viewPos = Camera.main.ScreenToViewportPoint(ScreenPos);
+        viewPos.z = 0.0f;
+        Vector3 uiScreenPos = UICamera.currentCamera.ScreenToWorldPoint(ScreenPos);
+        uiScreenPos.x += 0.18f;
+        //uiScreenPos.y += 0.13f;
+
+        ProgressBar.transform.position = uiScreenPos;
     }
 
     //public void StepOnGoalLine()

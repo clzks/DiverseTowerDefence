@@ -126,7 +126,7 @@ public class ConstructManager : MonoBehaviour
     public List<GameObject> LabelList = new List<GameObject>();
     // =============================================================================================== //
     private static object _Lock = new object();
-    public static ConstructManager instance = null;
+    private static ConstructManager instance = null;
     public static ConstructManager Instance
     {
         get
@@ -183,7 +183,6 @@ public class ConstructManager : MonoBehaviour
         SetGroundInfo();
 
     }
-#if DEBUG
     private void Update()
     {
         if (StageManager.Instance.isGameStart)
@@ -345,7 +344,6 @@ public class ConstructManager : MonoBehaviour
     // 코루틴 . 디비파싱
     public void TowerStatusDbParsing(string p)
     {
-        
         string Filepath = Application.persistentDataPath + "/" + p;
 
         if (!File.Exists(Filepath))
@@ -463,7 +461,4 @@ public class ConstructManager : MonoBehaviour
             }
         }
     }
-#else
-
-#endif
 }
