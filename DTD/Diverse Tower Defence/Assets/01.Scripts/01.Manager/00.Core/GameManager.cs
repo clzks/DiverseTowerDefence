@@ -30,27 +30,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    ////public static GameManager instance = null;
-    //public static GameManager Instance
-    //{
-    //    get
-    //    {
-    //        return instance;
-    //    }
-    //}
-    //private void Awake()
-    //{
-    //    if (instance == null)
-    //    {
-    //        instance = this;
-    //    }
-    //    else if (instance != this)
-    //    {
-    //        Destroy(gameObject);
-    //    }
-    //    
-    //    DontDestroyOnLoad(gameObject);
-    //}
 
     private void Start()
     {

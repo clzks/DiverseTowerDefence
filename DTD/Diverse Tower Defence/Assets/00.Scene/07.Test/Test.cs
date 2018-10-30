@@ -5,6 +5,8 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
 
+
+
     private void Start()
     {
         
@@ -16,7 +18,7 @@ public class Test : MonoBehaviour
         StageManager.Instance.LoadNodeInfo();
     }
 
-    private void Update()
+    private void Update()  // 나중에는 필히 바꾸야 겠지요?
     {
         if (ConstructManager.Instance.LabelList.Count != 0)
         {
@@ -35,4 +37,7 @@ public class Test : MonoBehaviour
     {
         StageManager.Instance.isGameStart = true;
     }
+
+    
+
 }

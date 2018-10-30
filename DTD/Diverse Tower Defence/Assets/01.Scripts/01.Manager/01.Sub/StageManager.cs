@@ -9,6 +9,7 @@ public class StageManager : MonoBehaviour
     public bool isGameStart = false;
     public int nLife = 100;
     public int nNodeNum = 24; // 최대 노드 수 
+    public EControl ControlType;
 
     // ========== 스테이지 세팅 관련 =============== \\
 
@@ -23,8 +24,9 @@ public class StageManager : MonoBehaviour
     private UILabel timer;
     private UILabel life;
     private UILabel StageNumber;
-      private bool isSetLabel = false;
+    private bool isSetLabel = false;
     private bool isSetSpot = false;
+
 
     //private UILabel lbTower0Info;
     //private UILabel lbTower1Info;
@@ -33,6 +35,13 @@ public class StageManager : MonoBehaviour
     //private List<UILabel> listLbTowerInfo = new List<UILabel>();
 
     // ============================================= \\ 
+    public enum EControl
+    {
+        Construct,
+        Upgrade,
+        Quest,
+        end
+    }
 
 
 
@@ -70,6 +79,8 @@ public class StageManager : MonoBehaviour
             }
         }
     }
+
+    
 
     private void Start()
     {
@@ -157,42 +168,7 @@ public class StageManager : MonoBehaviour
             }
             
 
-            //if (isWaitTime)
-            //    fWatingTime -= Time.deltaTime;
-            //
-            //if (fWatingTime <= 0.0f && isRegenTime == false)
-            //{
-            //    isWaitTime = false;
-            //    isRegenTime = true;
-            //    EnemyManager.Instance.nMadeMonsterNumber = 0;
-            //}
-            //if (isRegenTime)
-            //{
-            //    if (nStage % 10 != 9)
-            //    {
-            //        if (EnemyManager.Instance.nPoolIndex < 40)
-            //        {
-            //            EnemyManager.Instance.ResponeEnemy(nStage, 2.0f, EnemyManager.Instance.trNodeList[0].position);
-            //        }
-            //    }
-            //    else // 보스 젠
-            //    {
-            //        EnemyManager.Instance.ResponeBoss(nStage / 10, EnemyManager.Instance.trNodeList[0].position);
-            //    }
-            //}
-            //
-            //if (EnemyManager.Instance.isEliminate() && isWaitTime == false)
-            //{
-            //    isWaitTime = true;
-            //    isRegenTime = false;
-            //    fWatingTime = fSetWaitTime;
-            //    EnemyManager.Instance.isBossGen = false;
-            //    nStage++;
-            //}
-            //else
-            //{
-            //    EnemyManager.Instance.RunEnemy();
-            //}
+          
             }
             break;
 
@@ -207,8 +183,8 @@ public class StageManager : MonoBehaviour
     public void SetUI()
     {
         timer = GameObject.Find("UI Root/Camera/Timer").GetComponent<UILabel>();
-        life = GameObject.Find("UI Root/Camera/Life").GetComponent<UILabel>();
-        StageNumber = GameObject.Find("UI Root/Camera/StageNumber").GetComponent<UILabel>();
+        life = GameObject.Find("UI Root/Camera/LeftUI/Info/Life").GetComponent<UILabel>();
+        StageNumber = GameObject.Find("UI Root/Camera/LeftUI/Info/StageNumber").GetComponent<UILabel>();
         EnemyManager.Instance.BarParent = GameObject.Find("UI Root/Camera/ProgressBar").transform;
         //for (int i = 0; i < 4; ++i)
         //{
