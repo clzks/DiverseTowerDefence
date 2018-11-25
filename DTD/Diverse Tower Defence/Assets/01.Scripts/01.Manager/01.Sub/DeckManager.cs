@@ -7,9 +7,7 @@ public class DeckManager : MonoBehaviour
     public List<int> PossesTowerDeckList = new List<int>();                 // 보유한 모든 덱 리스트
     public List<int> SelectedTowerList = new List<int>();                  // 선택된 타워들 리스트
     public List<Sprite> DeckSpriteList = new List<Sprite>();               // 타워들 텍스쳐
-    //public List<List<int>> CurrPageTowerIndexList = new List<List<int>>();
-    //public List<TowerType> TowerTypeList = new List<TowerType>();
-    //public List<int> 
+
     public int nCurrPage = 1;
     public int nTotalPageNum;
     public int nCheckNum;
@@ -26,7 +24,7 @@ public class DeckManager : MonoBehaviour
             {
                 if (instance == null)
                 {
-                    UserDataManager.Instance.Load();
+                    UserDataManager.Instance.LoadDeckList();
                     instance = GameObject.Find("Manager").AddComponent<DeckManager>();
                     DontDestroyOnLoad(instance.gameObject);
                 }

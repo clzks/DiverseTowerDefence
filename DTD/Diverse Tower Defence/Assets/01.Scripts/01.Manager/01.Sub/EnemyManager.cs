@@ -291,19 +291,33 @@ public class EnemyManager : MonoBehaviour
     {
         GameObject go = new GameObject();
             
-        for(int i = 0; i < 12; ++i)
-        {
-            if (i != 9)
-            {
-                go = Resources.Load<GameObject>("Enemy" + i.ToString());
-            }
-            EnemyModelList.Add(go);
-        }
+        //for(int i = 0; i < 12; ++i)
+        //{
+        //    if (i != 9)
+        //    {
+        //        go = Resources.Load<GameObject>("Enemy" + i.ToString());
+        //    }
+        //    EnemyModelList.Add(go);
+        //}
         for (int i = 0; i < 1; ++i)
         {
             go = Resources.Load<GameObject>("Boss" + i.ToString());
             BossModelList.Add(go);
         }
+
+        go = Resources.Load<GameObject>("Orc_Archer_High");
+        EnemyModelList.Add(go);
+        go = Resources.Load<GameObject>("Orc_BladeMaster");
+        EnemyModelList.Add(go);
+        go = Resources.Load<GameObject>("Orc_Captain_High");
+        EnemyModelList.Add(go);
+        go = Resources.Load<GameObject>("Orc_Fighter_High");
+        EnemyModelList.Add(go);
+        go = Resources.Load<GameObject>("Orc_Mage_High");
+        EnemyModelList.Add(go);
+        go = Resources.Load<GameObject>("Orc_Warrior_High");
+        EnemyModelList.Add(go);
+
 
         ProgressBar = Resources.Load<GameObject>("ProgressBar");
        

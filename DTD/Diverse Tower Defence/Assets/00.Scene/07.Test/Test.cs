@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-
-
-
     private void Start()
     {
-        
         ConstructManager.Instance.MainCamera = Camera.main;
         for (int i = 0; i < ConstructManager.Instance.nGroundNum; ++i)
         {

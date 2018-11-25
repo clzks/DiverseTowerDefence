@@ -293,6 +293,14 @@ MonoBehaviour:
   PlayNum: 0
   HighestStage: 0
   ClearCount: 0
+  CurrStageNum: 0
+  CurrLife: 0
+  CurrGold: 0
+  CurrentDeckList: 
+  MultiBouncingUpgrade: 0
+  RangeUpgrade: 0
+  RapidUpgrade: 0
+  SplashAoEUpgrade: 0
 --- !u!114 &1569140662
 MonoBehaviour:
   m_ObjectHideFlags: 0

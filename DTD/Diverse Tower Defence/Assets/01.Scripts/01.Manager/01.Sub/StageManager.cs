@@ -9,14 +9,14 @@ public class StageManager : MonoBehaviour
     public bool isGameStart = false;
     public int nLife = 100;
     public int nNodeNum = 24; // 최대 노드 수 
-    public EControl ControlType;
-
+    public EControl ControlType = EControl.ENone;
+    public EConstruct ConstructType = EConstruct.None;
     // ========== 스테이지 세팅 관련 =============== \\
 
     public int nStage = 0;
     public List<Transform> trNodeList = new List<Transform>();         // 각각의 노드
     // ============================================ \\ 
-
+    
 
 
     // ========== UI 세팅 관련 ===================== \\
@@ -27,7 +27,7 @@ public class StageManager : MonoBehaviour
     private bool isSetLabel = false;
     private bool isSetSpot = false;
 
-
+    public InGameData inGameData;
     //private UILabel lbTower0Info;
     //private UILabel lbTower1Info;
     //private UILabel lbTower2Info;
@@ -37,20 +37,29 @@ public class StageManager : MonoBehaviour
     // ============================================= \\ 
     public enum EControl
     {
-        Construct,
-        Upgrade,
-        Quest,
+        EConstruct,
+        EUpgrade,
+        EQuest,
+        ENone,
         end
     }
 
-
-
+    // 건설 에서만 쓰는 이넘
+    public enum EConstruct 
+    {
+        Construct,
+        Merge,
+        Sell,
+        None
+    }
+   
     // =========== 라운드 진행 관련 ================= \\
 
     private float fWatingTime;
     public float fSetWaitTime = 5.0f;
 
     public int nPhase = 0;
+
     // 0:   대기시간이 가는 단계
     // 1:   유닛이 하나씩 등장하는 단계
     // 2:   유닛이 모두 등장한 단계
@@ -160,10 +169,13 @@ public class StageManager : MonoBehaviour
                 case 4:
                     EnemyManager.Instance.nMadeMonsterNumber = 0;
                     nPhase = 0;
+                    print("스테이지 완료! 골드 100 지급!");
+                    UpgradeManager.Instance.Gold += 100;
+                    inGameData.InitSetting();
                 break;
 
                 case 5:
-
+                 
                 break;
             }
             
@@ -198,7 +210,7 @@ public class StageManager : MonoBehaviour
             //Label.transform.parent = GameObject.Find("UI Root/Camera/ConstructInfo").transform;
             ConstructManager.Instance.LabelList.Add(g);
         }
-
+        inGameData = GameObject.Find("Scripts").GetComponent<InGameData>();
 
         isSetLabel = true;
     }

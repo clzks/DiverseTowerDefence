@@ -331,10 +331,10 @@ public class Bullet : MonoBehaviour
                 EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
             }
         }
-        else
-        {
-            Debug.Log("바보");
-        }
+        //else
+        //{
+        //    Debug.Log("바보");
+        //}
     }
 
     public void FindSplashTargets()

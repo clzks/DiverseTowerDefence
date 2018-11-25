@@ -125,6 +125,13 @@ public class ConstructManager : MonoBehaviour
     public GameObject TowerLabel;                                                                      // 타워에 사용할 라벨
     public List<GameObject> LabelList = new List<GameObject>();
     // =============================================================================================== //
+
+    // ==========  타워 관리 =============================
+    public List<Tower> MultiBouncingList = new List<Tower>();
+    public List<Tower> RapidList = new List<Tower>();
+    public List<Tower> RangeList = new List<Tower>();
+    public List<Tower> SplashAoEList = new List<Tower>();
+    // ==================================================
     private static object _Lock = new object();
     private static ConstructManager instance = null;
     public static ConstructManager Instance
@@ -189,7 +196,6 @@ public class ConstructManager : MonoBehaviour
         {
             if (GameManager.Instance.nCurrentScene == 1)
             {
-
                 if (Input.GetMouseButtonDown(0))
                 {
                     target = GetClickedObject();
@@ -198,24 +204,33 @@ public class ConstructManager : MonoBehaviour
                         if (target.tag == "TowerPlace")
                         {
                             int GroundIndex = System.Convert.ToInt32(target.name);
-                            ConstructTower(GroundIndex);
+
+                            if(StageManager.Instance.ControlType == StageManager.EControl.EConstruct)
+                            {
+                                if (StageManager.Instance.ConstructType == StageManager.EConstruct.Construct)
+                                {
+                                    if (NeedGold(100))
+                                    {
+                                        ConstructTower(GroundIndex);
+                                    }
+                                    else
+                                    {
+                                        print("골드가 부족캅니다");
+                                    }
+                                }
+                                else if(StageManager.Instance.ConstructType == StageManager.EConstruct.Merge)
+                                {
+                                    MergeTower(GroundIndex);
+                                }
+                                else if(StageManager.Instance.ConstructType == StageManager.EConstruct.Sell)
+                                {
+                                    DestructTower(GroundIndex);
+                                }
+                            }
+                            StageManager.Instance.inGameData.InitSetting();
                         }
                     }
                 }
-#if UNITY_EDITOR
-                if (Input.GetMouseButtonDown(1))
-                {
-                    target = GetClickedObject();
-                    if (target != null)
-                    {
-                        if (target.tag == "TowerPlace")
-                        {
-                            int GroundIndex = System.Convert.ToInt32(target.name);
-                            DestructTower(GroundIndex);
-                        }
-                    }
-                }
-#endif
             }
         }
     }
@@ -235,11 +250,7 @@ public class ConstructManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "TowerPlace")
-        {
-            int GroundIndex = System.Convert.ToInt32(other.name);
-            ConstructTower(GroundIndex);
-        }
+        
     }
 
     private void OnDrawGizmos()
@@ -261,18 +272,27 @@ public class ConstructManager : MonoBehaviour
             goTower.AddComponent<Tower>();
             Tower t = goTower.GetComponent<Tower>();
             t.SetTowerStatus(towerStatusDic[towerTypeList[groundInfoList[i].TowerIndex].TowerName][groundInfoList[i].TowerLevel], groundInfoList[i].TowerIndex, i);
-
+            //SetTowerManageMent(t);
             goTower.transform.position = groundInfoList[i].position;
-            
             UserTowerDic.Add(i, goTower);
+
+            UpgradeManager.Instance.Gold -= 100;
         }
-        else if (groundInfoList[i].TowerIndex != -1)  //  타워가 건설되어 있을 때
+        else
+        {
+            print("이미 타워가 건설되어 있습니다");
+        }
+    }
+
+    public void MergeTower(int i)
+    {
+        if (groundInfoList[i].TowerIndex != -1)  //  타워가 건설되어 있을 때
         {
             // 해당지역의 타워인덱스와 레벨을 받아온다.
             int TowerIndex = groundInfoList[i].TowerIndex;
             int Level = groundInfoList[i].TowerLevel;
             bool isSearch = false;
-            for(int n = 0; n < nGroundNum; ++n)
+            for (int n = 0; n < nGroundNum; ++n)
             {
                 bool TIsame = false;
                 bool LVsame = false;
@@ -296,7 +316,9 @@ public class ConstructManager : MonoBehaviour
                     groundInfoList[n].TowerLevel = -1;
 
                     Tower t = UserTowerDic[i].GetComponent<Tower>();
+                    //Tower NewTower = ChangeManageMent(t);
                     t.SetTowerStatus(towerStatusDic[towerTypeList[groundInfoList[i].TowerIndex].TowerName][groundInfoList[i].TowerLevel], groundInfoList[i].TowerIndex, i);
+                    //SetTowerManageMent(NewTower);
                     Destroy(UserTowerDic[n].gameObject);
                     UserTowerDic.Remove(n);
                     break;
@@ -305,9 +327,37 @@ public class ConstructManager : MonoBehaviour
             if (!isSearch)
                 print("같은 종류의 타워를 찾을 수 없습니다");
         }
+        else
+        {
+            print("타워가 건설되지 않았습니다");
+        }
     }
     private void DestructTower(int i)
     {
+        int Level = groundInfoList[i].TowerLevel;
+        switch (Level)
+        {
+            case 0:
+                UpgradeManager.Instance.Gold += 50;
+                break;
+
+            case 1:
+                UpgradeManager.Instance.Gold += 100;
+                break;
+
+            case 2:
+                UpgradeManager.Instance.Gold += 200;
+                break;
+
+            case 3:
+                UpgradeManager.Instance.Gold += 400;
+                break;
+
+            case 4:
+                UpgradeManager.Instance.Gold += 800;
+                break;
+        }
+
         groundInfoList[i].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
         groundInfoList[i].TowerLevel = -1;
         Destroy(UserTowerDic[i].gameObject);
@@ -327,8 +377,167 @@ public class ConstructManager : MonoBehaviour
         TowerLabel = Resources.Load<GameObject>("Label/ConstructInfoLabel");
     }
 
-    
+    private Tower ChangeManageMent(Tower t)
+    {
+        if (t.TowerType == (int)ConstructManager.ETowerType.AoE || t.TowerType == (int)ConstructManager.ETowerType.Splash || t.TowerType == (int)ConstructManager.ETowerType.Laser)
+        {
+            SplashAoEList.Remove(t);
+        }
+        else if (t.TowerType == (int)ConstructManager.ETowerType.Bouncing || t.TowerType == (int)ConstructManager.ETowerType.Multi)
+        {
+            MultiBouncingList.Remove(t);
+        }
+        else if (t.TowerType == (int)ConstructManager.ETowerType.Critical || t.TowerType == (int)ConstructManager.ETowerType.Lucky || t.TowerType == (int)ConstructManager.ETowerType.Range)
+        {
+            RangeList.Remove(t);
+        }
+        else if (t.TowerType == (int)ConstructManager.ETowerType.Dot || t.TowerType == (int)ConstructManager.ETowerType.Normal || t.TowerType == (int)ConstructManager.ETowerType.Rapid)
+        {
+            RapidList.Remove(t);
+        }
+        else
+        {
 
+        }
+        Tower newT = new Tower();
+
+        return newT;
+    }
+
+    private void SetTowerManageMent(Tower t) 
+    {
+        if (t.TowerType == (int)ConstructManager.ETowerType.AoE || t.TowerType == (int)ConstructManager.ETowerType.Splash || t.TowerType == (int)ConstructManager.ETowerType.Laser)
+        {
+            SplashAoEList.Add(t);
+        }
+        else if (t.TowerType == (int)ConstructManager.ETowerType.Bouncing || t.TowerType == (int)ConstructManager.ETowerType.Multi)
+        {
+            MultiBouncingList.Add(t);
+        }
+        else if (t.TowerType == (int)ConstructManager.ETowerType.Critical || t.TowerType == (int)ConstructManager.ETowerType.Lucky || t.TowerType == (int)ConstructManager.ETowerType.Range)
+        {
+            RangeList.Add(t);
+        }
+        else if (t.TowerType == (int)ConstructManager.ETowerType.Dot || t.TowerType == (int)ConstructManager.ETowerType.Normal || t.TowerType == (int)ConstructManager.ETowerType.Rapid)
+        {
+            RapidList.Add(t);
+        }
+        else
+        {
+
+        }
+    }
+
+    public void CheckManageMentNullAndDelete()
+    {
+        if(MultiBouncingList.Count != 0)
+        {
+            for(int i = 0; i<MultiBouncingList.Count; ++i)
+            {
+                if(MultiBouncingList[i] == null)
+                {
+                    MultiBouncingList.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        if (RapidList.Count != 0)
+        {
+            for (int i = 0; i < RapidList.Count; ++i)
+            {
+                if (RapidList[i] == null)
+                {
+                    RapidList.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        if (RangeList.Count != 0)
+        {
+            for (int i = 0; i < RangeList.Count; ++i)
+            {
+                if (RangeList[i] == null)
+                {
+                    RangeList.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        if (SplashAoEList.Count != 0)
+        {
+            for (int i = 0; i < SplashAoEList.Count; ++i)
+            {
+                if (SplashAoEList[i] == null)
+                {
+                    SplashAoEList.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+    }
+    public void CheckUpgradeTower(int i)
+    {
+        switch(i)
+        {
+            // 멀티 바운싱
+            case 0:
+                for(int n = 0; n < MultiBouncingList.Count; ++n)
+                {
+                    if(MultiBouncingList[n] != null)
+                    {
+                        MultiBouncingList[n].CurrUpgradeNum = UpgradeManager.Instance.MultiBouncingUpgrade;
+                    }
+                }
+                break;
+
+            // 래피드
+            case 1:
+                for (int n = 0; n < RapidList.Count; ++n)
+                {
+                    if (RapidList[n] != null)
+                    {
+                        RapidList[n].CurrUpgradeNum = UpgradeManager.Instance.RapidUpgrade;
+                    }
+                }
+                break;
+            
+            // 레인지
+            case 2:
+                for (int n = 0; n < RangeList.Count; ++n)
+                {
+                    if (RangeList[n] != null)
+                    {
+                        RangeList[n].CurrUpgradeNum = UpgradeManager.Instance.RangeUpgrade;
+                    }
+                }
+                break;
+
+            // 스플래쉬 광역
+            case 3:
+                for (int n = 0; n < SplashAoEList.Count; ++n)
+                {
+                    if (SplashAoEList[n] != null)
+                    {
+                        SplashAoEList[n].CurrUpgradeNum = UpgradeManager.Instance.SplashAoEUpgrade;
+                    }
+                }
+                break;
+        }
+    }
+    private bool NeedGold(int n)
+    {
+        bool b = true;
+
+        if(UpgradeManager.Instance.Gold < n)
+        {
+            b = false;
+        }
+
+        return b;
+    }
     private void SetGroundInfo()
     {
         for (int i = 0; i < nGroundNum; ++i)

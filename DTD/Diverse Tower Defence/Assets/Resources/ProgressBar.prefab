@@ -111,8 +111,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 230, y: 72, z: 0}
-  m_Center: {x: 115, y: 0, z: 0}
+  m_Size: {x: 115, y: 20, z: 0}
+  m_Center: {x: 57.5, y: 0, z: 0}
 --- !u!114 &114047495443665206
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -143,14 +143,14 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 3
-  mWidth: 230
-  mHeight: 72
+  mWidth: 115
+  mHeight: 20
   mDepth: 0
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 3.1944444
+  aspectRatio: 5.75
   mType: 0
   mFillDirection: 4
   mFillAmount: 1
@@ -164,8 +164,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114584142490058848, guid: 3ef3fadb026b16b4eb2d057ce38005b9, type: 2}
-  mSpriteName: SF Button
+  mAtlas: {fileID: 114747514965111646, guid: c948a81681ac00f4792b91117996e3b5, type: 2}
+  mSpriteName: Button_11
   mFillCenter: 1
 --- !u!114 &114128084856526050
 MonoBehaviour:
@@ -197,14 +197,14 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 0, b: 0, a: 1}
   mPivot: 3
-  mWidth: 230
-  mHeight: 72
+  mWidth: 115
+  mHeight: 20
   mDepth: 1
   mMat: {fileID: 0}
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 3.1944444
+  aspectRatio: 5.75
   mType: 0
   mFillDirection: 4
   mFillAmount: 1
@@ -218,8 +218,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 114584142490058848, guid: 3ef3fadb026b16b4eb2d057ce38005b9, type: 2}
-  mSpriteName: SF Button
+  mAtlas: {fileID: 114747514965111646, guid: c948a81681ac00f4792b91117996e3b5, type: 2}
+  mSpriteName: Button_11
   mFillCenter: 1
 --- !u!114 &114331841400166550
 MonoBehaviour:

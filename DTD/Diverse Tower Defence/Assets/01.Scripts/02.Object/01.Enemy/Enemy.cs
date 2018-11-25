@@ -44,9 +44,9 @@ public class Enemy : MonoBehaviour
     public void Update()
     {
         EnemyTransform.position += vDir * GameManager.Instance.nGameSpeed * Time.deltaTime * 3.0f;
-
+        EnemyTransform.rotation = Define.GetRotFromVectors(vDir);
         v = StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - EnemyTransform.position;
-
+        
         if (Vector3.Dot(vDir, v) < 0)
         {
             CurrNode++;
@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
             if (CurrNode <= nNodeNum - 2)
             {
                 NextNodeName = "Node" + NodeList[CurrNode + 1].ToString();
-                vDir = (StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - StageManager.Instance.trNodeList[NodeList[CurrNode]].transform.position).normalized;
+                vDir = (StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - StageManager.Instance.trNodeList[NodeList[CurrNode]].transform.position).normalized;              
             }
             else
             {
@@ -269,11 +269,14 @@ public class Enemy : MonoBehaviour
         Vector3 viewPos = Camera.main.ScreenToViewportPoint(ScreenPos);
         viewPos.z = 0.0f;
         Vector3 uiScreenPos = UICamera.currentCamera.ScreenToWorldPoint(ScreenPos);
-        uiScreenPos.x += 0.18f;
+        uiScreenPos.x += 0.09f;
+        uiScreenPos.y += 0.12f;
         //uiScreenPos.y += 0.13f;
 
         ProgressBar.transform.position = uiScreenPos;
     }
+
+ 
 
     //public void StepOnGoalLine()
     //{

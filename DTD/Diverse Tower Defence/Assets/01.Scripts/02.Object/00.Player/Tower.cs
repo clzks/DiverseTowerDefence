@@ -38,7 +38,7 @@ public class Tower : MonoBehaviour
     public int MultiNum;                 // 멀티샷 추가 갯수
     public float MultiRate;              // 멀티샷 데미지 비율
     public int CurrUpgradeNum;           // 현재업글 숫자
-
+    
     // =============================================================== //
     //public GameObject Target;   // 설정된 타깃
     public List<GameObject> Target = new List<GameObject>();    // 리스트의 0번이 타워가 바라보게 될 타겟
@@ -79,12 +79,37 @@ public class Tower : MonoBehaviour
 
     public void Update()
     {
-       
+        CheckTowerUpgrade();
     }
 
     public void OnTriggerEnter(Collider other)
     {
         //if(Physics.OverlapSphere())
+    }
+
+
+    public void CheckTowerUpgrade()
+    {
+        if(TowerType == (int)ConstructManager.ETowerType.AoE || TowerType == (int)ConstructManager.ETowerType.Splash || TowerType == (int)ConstructManager.ETowerType.Laser)
+        {
+            CurrUpgradeNum = UpgradeManager.Instance.SplashAoEUpgrade;
+        }
+        else if(TowerType == (int)ConstructManager.ETowerType.Bouncing || TowerType == (int)ConstructManager.ETowerType.Multi)
+        {
+            CurrUpgradeNum = UpgradeManager.Instance.MultiBouncingUpgrade;
+        }
+        else if(TowerType == (int)ConstructManager.ETowerType.Critical || TowerType == (int)ConstructManager.ETowerType.Lucky || TowerType == (int)ConstructManager.ETowerType.Range)
+        {
+            CurrUpgradeNum = UpgradeManager.Instance.RangeUpgrade;
+        }
+        else if(TowerType == (int)ConstructManager.ETowerType.Dot || TowerType == (int)ConstructManager.ETowerType.Normal || TowerType == (int)ConstructManager.ETowerType.Rapid)
+        {
+            CurrUpgradeNum = UpgradeManager.Instance.RapidUpgrade;
+        }
+        else
+        {
+
+        }
     }
 
     public void SetTarget()
@@ -368,6 +393,11 @@ public class Tower : MonoBehaviour
         MultiRate = ts.MultiRate;
         CurrUpgradeNum = ts.CurrUpgradeNum;
     }
+    public void UpgradeTowerAttack()
+    {
+        CurrUpgradeNum++;
+    }
+
 
     private void OnDrawGizmos()
     {

@@ -1057,13 +1057,13 @@ MonoBehaviour:
   - name: Panel_4
     x: 427
     y: 814
-    width: 501
+    width: 500
     height: 210
     borderLeft: 0
     borderRight: 0
     borderTop: 0
     borderBottom: 0
-    paddingLeft: 0
+    paddingLeft: 1
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
