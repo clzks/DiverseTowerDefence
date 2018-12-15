@@ -38,7 +38,7 @@ public class Tower : MonoBehaviour
     public int MultiNum;                 // 멀티샷 추가 갯수
     public float MultiRate;              // 멀티샷 데미지 비율
     public int CurrUpgradeNum;           // 현재업글 숫자
-    
+    public int CurrKillCount;       
     // =============================================================== //
     //public GameObject Target;   // 설정된 타깃
     public List<GameObject> Target = new List<GameObject>();    // 리스트의 0번이 타워가 바라보게 될 타겟
@@ -354,9 +354,10 @@ public class Tower : MonoBehaviour
         CurrUpgradeNum = ts.CurrUpgradeNum;
         vPosition = ConstructManager.Instance.groundInfoList[groundIndex].position;
         vPosition.y = 0.0f;
+        CurrKillCount = 0;
     }
 
-    public void SetTowerStatus(TowerStatus ts)
+    public void SetTowerStatus(TowerStatus ts)      // 예전에 타워 테스트할때 썼던듯 
     {
         Name = ts.Name;
         ID = 0;
@@ -418,10 +419,10 @@ public class Tower : MonoBehaviour
 
     private IEnumerator AttackTimer()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         if (fCurrCooltime > 0.0f)
         {
-            fCurrCooltime -= 0.2f;
+            fCurrCooltime -= 0.1f * GameManager.Instance.nGameSpeed;
         }
         else if(isStart && fCurrCooltime <= 0)       // 타겟이 있고 쿨타임이 0보다 줄어들었다면
         {

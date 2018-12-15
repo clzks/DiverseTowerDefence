@@ -101,6 +101,7 @@ public class GroundInfo
     public int index;
     public int TowerIndex;
     public int TowerLevel;
+    public int TowerIndexOfList;
     public Vector3 position;
 }
 
@@ -266,8 +267,9 @@ public class ConstructManager : MonoBehaviour
 
             groundInfoList[i].TowerIndex = UserDataManager.Instance.TowerDeckList[r];
             groundInfoList[i].TowerLevel = 0;
+            groundInfoList[i].TowerIndexOfList = r;
 
-            GameObject goTower = Instantiate(towerModelList[0]);
+            GameObject goTower = Instantiate(towerModelList[r]);
             goTower.name = "tower" + i.ToString();
             goTower.AddComponent<Tower>();
             Tower t = goTower.GetComponent<Tower>();
@@ -277,6 +279,8 @@ public class ConstructManager : MonoBehaviour
             UserTowerDic.Add(i, goTower);
 
             UpgradeManager.Instance.Gold -= 100;
+            QuestManager.Instance.GetInfomation(QuestManager.EGlobalQuestInfoType.Construct);
+            QuestManager.Instance.OccurToConstructMoment(0, r);
         }
         else
         {
@@ -306,21 +310,31 @@ public class ConstructManager : MonoBehaviour
 
                 if (TIsame && LVsame)
                 {
+                    int index1 = groundInfoList[i].TowerIndexOfList;
+                    int index2 = groundInfoList[n].TowerIndexOfList;
+
                     isSearch = true;
                     groundInfoList[i].TowerLevel += 1;  // 클릭한 지역의 타워 레벨은 1업~
 
                     int r = Random.Range(0, 7);
                     groundInfoList[i].TowerIndex = UserDataManager.Instance.TowerDeckList[r];
+                    groundInfoList[i].TowerIndexOfList = r;
 
                     groundInfoList[n].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
                     groundInfoList[n].TowerLevel = -1;
+                    groundInfoList[n].TowerIndexOfList = -1;
 
                     Tower t = UserTowerDic[i].GetComponent<Tower>();
+
                     //Tower NewTower = ChangeManageMent(t);
                     t.SetTowerStatus(towerStatusDic[towerTypeList[groundInfoList[i].TowerIndex].TowerName][groundInfoList[i].TowerLevel], groundInfoList[i].TowerIndex, i);
+                    t.CurrKillCount = 0;
                     //SetTowerManageMent(NewTower);
                     Destroy(UserTowerDic[n].gameObject);
                     UserTowerDic.Remove(n);
+                    QuestManager.Instance.GetInfomation(QuestManager.EGlobalQuestInfoType.Merge);
+                    QuestManager.Instance.OccurToMergeMoment(Level, index1, Level, index2, Level + 1, r);
+
                     break;
                 }
             }
@@ -335,6 +349,8 @@ public class ConstructManager : MonoBehaviour
     private void DestructTower(int i)
     {
         int Level = groundInfoList[i].TowerLevel;
+        
+
         switch (Level)
         {
             case 0:
@@ -358,8 +374,12 @@ public class ConstructManager : MonoBehaviour
                 break;
         }
 
+        QuestManager.Instance.GetInfomation(QuestManager.EGlobalQuestInfoType.Construct);
+        QuestManager.Instance.OccurToDestructMoment(Level, groundInfoList[i].TowerIndexOfList);
+
         groundInfoList[i].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
         groundInfoList[i].TowerLevel = -1;
+        groundInfoList[i].TowerIndexOfList = -1;
         Destroy(UserTowerDic[i].gameObject);
         UserTowerDic.Remove(i);
     }
@@ -368,8 +388,11 @@ public class ConstructManager : MonoBehaviour
     private void LoadTowerModel()
     {
         GameObject go = new GameObject();
-        go = Resources.Load<GameObject>("Tower");
-        towerModelList.Add(go);
+        for (int i = 0; i < 10; ++i)
+        {
+            go = Resources.Load<GameObject>("Towers/Tower" + i.ToString());
+            towerModelList.Add(go);
+        }
     }
 
     private void LoadTowerInfoLabel()

@@ -30,6 +30,8 @@ public class Enemy : MonoBehaviour
     public Vector2 ProgressBar_Size;
     public Transform EnemyTransform;
 
+    public Tower LastAttackedTower;
+
     public void Start()
     {
         GameObject Go = NGUITools.AddChild(EnemyManager.Instance.BarParent.gameObject, EnemyManager.Instance.ProgressBar);
@@ -59,7 +61,9 @@ public class Enemy : MonoBehaviour
             else
             {
                 EnemyManager.Instance.EnemyPool[Id].SetActive(false);
-                StageManager.Instance.nLife -= 1;
+                StageManager.Instance.OccurToMonsterEndline();
+                //QuestManager.Instance.DecreaseHp();
+                
                 Destroy(ProgressBar.gameObject);
         
                 Destroy(gameObject);
@@ -95,7 +99,12 @@ public class Enemy : MonoBehaviour
 
     public void Damage(Bullet b)
     {
-        switch (b.nTowerType)
+        if (Curr_HP > 0)
+        {
+            LastAttackedTower = ConstructManager.Instance.UserTowerDic[b.nTowerId].GetComponent<Tower>();
+        }
+
+            switch (b.nTowerType)
         {
             case (int)ConstructManager.ETowerType.Range: 
                 Curr_HP -= b.fAttack;
@@ -176,6 +185,8 @@ public class Enemy : MonoBehaviour
                 Debug.Log("입은 피해 : " + b.fAttack.ToString());
                 break;
         }
+
+       
     }
 
     public IEnumerator DotAttack(Bullet b)
@@ -232,32 +243,41 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == NextNodeName)
-        {
-            CurrNode++;
-            CurrNodeName = "Node" + NodeList[CurrNode].ToString();
-            if (CurrNode <= nNodeNum - 2)
-            {
-                NextNodeName = "Node" + NodeList[CurrNode + 1].ToString();
-                vDir = (StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - StageManager.Instance.trNodeList[NodeList[CurrNode]].transform.position).normalized;
-            }
-            else
-            {
-                EnemyManager.Instance.EnemyPool[Id].SetActive(false);
-                StageManager.Instance.nLife -= 1;
-                Destroy(ProgressBar.gameObject);
-
-                Destroy(gameObject);
-            }
-        }
+        //if (other.name == NextNodeName)
+        //{
+        //    CurrNode++;
+        //    CurrNodeName = "Node" + NodeList[CurrNode].ToString();
+        //    if (CurrNode <= nNodeNum - 2)
+        //    {
+        //        NextNodeName = "Node" + NodeList[CurrNode + 1].ToString();
+        //        vDir = (StageManager.Instance.trNodeList[NodeList[CurrNode + 1]].transform.position - StageManager.Instance.trNodeList[NodeList[CurrNode]].transform.position).normalized;
+        //    }
+        //    else
+        //    {
+        //        EnemyManager.Instance.EnemyPool[Id].SetActive(false);
+        //        StageManager.Instance.nLife -= 1;
+        //        Destroy(ProgressBar.gameObject);
+        //
+        //        Destroy(gameObject);
+        //    }
+        //}
     }
 
     private void OnDestroy()
     {
+        if (Curr_HP <= 0.0f)
+        {
+            AddKillCount();
+            //Debug.Log(LastAttackedTower.ID + "번 타워 의 현재 킬 카운트 : " + LastAttackedTower.CurrKillCount);
+        }
+
         if (ProgressBar != null)
         {
             Destroy(ProgressBar.gameObject);
         }
+
+
+        //Debug.Log("현재 킬 카운트 : " + UserDataManager.Instance.CurrKillCount);
     }
 
     public void SetEnemyProgressBar()
@@ -276,7 +296,12 @@ public class Enemy : MonoBehaviour
         ProgressBar.transform.position = uiScreenPos;
     }
 
- 
+    public void AddKillCount()
+    {
+        LastAttackedTower.CurrKillCount++;
+        UserDataManager.Instance.CurrKillCount++;
+        QuestManager.Instance.OccurToKillMoment();
+    }
 
     //public void StepOnGoalLine()
     //{

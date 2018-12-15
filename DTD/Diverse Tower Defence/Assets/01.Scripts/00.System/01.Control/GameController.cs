@@ -117,6 +117,7 @@ public class GameController : MonoBehaviour
             {
                 UpgradeManager.Instance.Gold -= g;
                 UpgradeManager.Instance.Upgrade(ref UpgradeManager.Instance.MultiBouncingUpgrade);
+                UserDataManager.Instance.MultiBouncingUpgrade = UpgradeManager.Instance.MultiBouncingUpgrade;
             }
             else
             {
@@ -131,6 +132,7 @@ public class GameController : MonoBehaviour
             {
                 UpgradeManager.Instance.Gold -= g;
                 UpgradeManager.Instance.Upgrade(ref UpgradeManager.Instance.RangeUpgrade);
+                UserDataManager.Instance.MultiBouncingUpgrade = UpgradeManager.Instance.RangeUpgrade;
             }
             else
             {
@@ -145,6 +147,7 @@ public class GameController : MonoBehaviour
             {
                 UpgradeManager.Instance.Gold -= g;
                 UpgradeManager.Instance.Upgrade(ref UpgradeManager.Instance.RapidUpgrade);
+                UserDataManager.Instance.MultiBouncingUpgrade = UpgradeManager.Instance.RapidUpgrade;
             }
             else
             {
@@ -159,16 +162,32 @@ public class GameController : MonoBehaviour
             {
                 UpgradeManager.Instance.Gold -= g;
                 UpgradeManager.Instance.Upgrade(ref UpgradeManager.Instance.SplashAoEUpgrade);
+                UserDataManager.Instance.MultiBouncingUpgrade = UpgradeManager.Instance.SplashAoEUpgrade;
             }
             else
             {
                 print("골드가 부조캅니다");
             }
         }
-
+        UserDataManager.Instance.CurrGold = UpgradeManager.Instance.Gold;
         //ConstructManager.Instance.CheckUpgradeTower(i);
     }
     // ======================================================================
+
+    // ================== 게임속도 조절 ======================================
+    public void SetGameSpeed()
+    {
+        if(GameManager.Instance.isGameSpeedDouble)
+        {
+            GameManager.Instance.isGameSpeedDouble = false;
+            GameManager.Instance.nGameSpeed = 1.0f;
+        }
+        else
+        {
+            GameManager.Instance.isGameSpeedDouble = true;
+            GameManager.Instance.nGameSpeed = 2.0f;
+        }
+    }
 
     // ================== 각종 함수 ==========================================
     private bool NeedGold(int n)

@@ -30,6 +30,7 @@ public class UserDataManager : MonoBehaviour
     public int RangeUpgrade;
     public int RapidUpgrade;
     public int SplashAoEUpgrade;
+    public int CurrKillCount;
 
     // ===========================================================
     private static object _Lock = new object();
@@ -102,7 +103,8 @@ public class UserDataManager : MonoBehaviour
         RangeUpgrade = (int)LoadData[Define.RangeUpgrade];
         RapidUpgrade = (int)LoadData[Define.RapidUpgrade];
         SplashAoEUpgrade = (int)LoadData[Define.SplashAoEUpgrade];
-        
+        CurrKillCount = (int)LoadData[Define.CurrKillCount];
+
         //PossesTowerList = LoadData[Define.PossesTowerList];
         JArray j1 = (JArray)LoadData[Define.PossesTowerList];
         PossesTowerList = j1.ToObject<List<int>>();
@@ -128,6 +130,7 @@ public class UserDataManager : MonoBehaviour
         jSaveData[Define.RangeUpgrade] = RangeUpgrade;
         jSaveData[Define.RapidUpgrade] = RapidUpgrade;
         jSaveData[Define.SplashAoEUpgrade] = SplashAoEUpgrade;
+        jSaveData[Define.CurrKillCount] = CurrKillCount;
 
         JArray jTowerDeckListData = new JArray();
         for (int i = 0; i < TowerDeckList.Count; ++i)
@@ -185,5 +188,6 @@ public class UserDataManager : MonoBehaviour
         RangeUpgrade = 0;
         RapidUpgrade = 0;
         SplashAoEUpgrade = 0;
+        CurrKillCount = 0;
     }
 }

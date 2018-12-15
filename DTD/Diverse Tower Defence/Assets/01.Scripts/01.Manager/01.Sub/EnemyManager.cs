@@ -103,7 +103,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
-        
+      
     }
 
     private void FixedUpdate()
@@ -217,6 +217,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
     
+    // 치트키
     public void TakeDamage(int damage)
     {
         for(int i = 0; i < nPoolNum; ++i)

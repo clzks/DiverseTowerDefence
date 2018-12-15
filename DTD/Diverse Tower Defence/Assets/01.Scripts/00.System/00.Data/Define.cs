@@ -21,6 +21,8 @@ public class Define
     public static readonly string RapidUpgrade = "RapidUpgrade";
     public static readonly string SplashAoEUpgrade = "SplashAoEUpgrade";
 
+    public static readonly string CurrKillCount = "CurrKillCount";
+
     public static Quaternion GetRotFromVectors(Vector3 vDir)
     {
         return Quaternion.Euler(0, Mathf.Atan2(vDir.x , vDir.z) * Mathf.Rad2Deg, 0);

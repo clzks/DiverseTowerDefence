@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     // ======================= 게임 세팅관련 ======================== // (나중에 옵션매니저에 갈것임)
     [Range(0.1f, 10.0f)]
     public float nGameSpeed = 1.0f;
-    
+    public bool isGameSpeedDouble = false;
     //============================================================================================
     private static object _Lock = new object();
     public static GameManager instance = null;
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
         EnemyManager.Instance.LoadModelList();
 
         BulletManager.Instance.LoadModelList();
-
+        QuestManager.Instance.InitQuestData();
       
     }
 

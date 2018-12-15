@@ -211,7 +211,7 @@ public class StageManager : MonoBehaviour
             ConstructManager.Instance.LabelList.Add(g);
         }
         inGameData = GameObject.Find("Scripts").GetComponent<InGameData>();
-
+        QuestManager.Instance.SetLabel();
         isSetLabel = true;
     }
 
@@ -259,7 +259,12 @@ public class StageManager : MonoBehaviour
             BulletManager.Instance.MakeBulletPool();
         }
     }
-    
+    public void OccurToMonsterEndline()
+    {
+        nLife--;
+        QuestManager.Instance.OccurToMonsterEndLine();
+    }
+
     // 현재 보스 전 스테이지에서 보스 스테이지 넘어갈때 문제있슴
     private void StageController()
     {
