@@ -10,9 +10,10 @@ using Newtonsoft.Json.Linq;
 public class UserDataManager : MonoBehaviour
 {
     // 인게임 데이터 아닌거 =======================================
-    public int Ruby;
+    public int Gems;
     public List<int> TowerDeckList = new List<int>();                   // 현재 저장된 타워 덱 리스트
     public List<int> PossesTowerList = new List<int>();                 // 유저가 보유한 타워 덱 리스트
+    public List<int> SelectedTowerList = new List<int>();               // 선택된 타워 리스트 
 
     public int PlayNum;                                                 // 플레이 횟수
     public int HighestStage;                                            // 최고 스테이지 기록
@@ -54,16 +55,16 @@ public class UserDataManager : MonoBehaviour
 
     private void Start()
     {
-        InitUserData();
+        //InitUserData();
     }
 
     public void InitUserData()
     {
-        Ruby = 0;                                                   // 루비 초기화
+        Gems = 0;                                                   // 루비 초기화
         TowerDeckList.Clear();                                      // 기본 제공 타워 덱(나중에 수정가능)
         PossesTowerList.Clear();                                    // 보유한 타워 덱;
 
-        InitDeckList();                                             // 덱 리스트 세팅
+        InitSelectedDeckList();                                     // 선택된 덱 리스트 세팅
         InitPossesTowerList();                                      // 보유한 타워 리스트 초기화
         CurrentDeckList = TowerDeckList;                            // 현재 덱 또한 초기화 된 타워덱리스트
 
@@ -92,7 +93,7 @@ public class UserDataManager : MonoBehaviour
         string LoadString = File.ReadAllText(Application.persistentDataPath + "/SaveData.json");
         JObject LoadData = JObject.Parse(LoadString);
 
-        Ruby = (int)LoadData[Define.Ruby];
+        Gems = (int)LoadData[Define.Gems];
         PlayNum = (int)LoadData[Define.PlayNum];
         HighestStage = (int)LoadData[Define.HighestStage];
         ClearCount = (int)LoadData[Define.ClearCount];
@@ -119,7 +120,7 @@ public class UserDataManager : MonoBehaviour
     public void SaveAllData()
     {
         JObject jSaveData = new JObject();
-        jSaveData[Define.Ruby] = Ruby;
+        jSaveData[Define.Gems] = Gems;
         jSaveData[Define.PlayNum] = PlayNum;
         jSaveData[Define.HighestStage] = HighestStage;
         jSaveData[Define.ClearCount] = ClearCount;
@@ -157,7 +158,7 @@ public class UserDataManager : MonoBehaviour
     }
 
 
-    public void InitDeckList()
+    public void InitSelectedDeckList()                  // 선택된 타워 리스트
     {
         TowerDeckList.Add(0);
         TowerDeckList.Add(5);
@@ -167,12 +168,19 @@ public class UserDataManager : MonoBehaviour
         TowerDeckList.Add(20);
         TowerDeckList.Add(23);
         TowerDeckList.Add(25);
+        //for (int i = 0; i < 8; ++i)
+        //{
+        //    int Index = 0;
+        //    PossesTowerList.Add(Index);
+        //}
     }
     public void InitPossesTowerList()
     {
-        for (int i = 0; i < 31; ++i)
+        int ModelCount = DeckManager.Instance.PossesTowerDeckList.Count;
+        for (int i = 0; i < ModelCount; ++i)
         {
-            PossesTowerList.Add(i);
+            int Index = DeckManager.Instance.PossesTowerDeckList[i];
+            PossesTowerList.Add(Index);
         }
     }
 
@@ -189,5 +197,10 @@ public class UserDataManager : MonoBehaviour
         RapidUpgrade = 0;
         SplashAoEUpgrade = 0;
         CurrKillCount = 0;
+    }
+
+    public void AddGems(int i)
+    {
+        Gems += i;
     }
 }

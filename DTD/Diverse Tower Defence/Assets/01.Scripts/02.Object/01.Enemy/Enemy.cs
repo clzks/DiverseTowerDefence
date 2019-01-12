@@ -101,7 +101,14 @@ public class Enemy : MonoBehaviour
     {
         if (Curr_HP > 0)
         {
-            LastAttackedTower = ConstructManager.Instance.UserTowerDic[b.nTowerId].GetComponent<Tower>();
+            if (ConstructManager.Instance.UserTowerDic[b.nTowerId] != null)
+            {
+                LastAttackedTower = ConstructManager.Instance.UserTowerDic[b.nTowerId].GetComponent<Tower>();
+            }
+            else
+            {
+                LastAttackedTower = null;
+            }
         }
 
             switch (b.nTowerType)

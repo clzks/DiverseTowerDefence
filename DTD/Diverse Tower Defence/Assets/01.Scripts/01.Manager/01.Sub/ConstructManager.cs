@@ -18,6 +18,7 @@ public class TowerStatus
     public int TowerIndex;
     public float UpgradePerDamage;
     public int BulletType;                  // 공격타입 (즉발, 투사체, 광선, 근접, 스플)
+    public int BulletModelIndex;            // 불릿 모델 인덱스
     public float Range;
     public float BounceDDR;              // 튕길때마다 데미지 감소 비율
     public float BulletSpd;
@@ -43,7 +44,7 @@ public class TowerStatus
     public float MultiRate;              // 멀티샷의 데미지 비율
     public int CurrUpgradeNum;           // 현재 업그레이드 숫자
 
-    public TowerStatus(string n, int id, int lev, int type, float a, float s, int c, int t, float upd, int bt, float range, float bddr, float bs, int bn, float minD, float maxD, float upmd, float upxd, 
+    public TowerStatus(string n, int id, int lev, int type, float a, float s, int c, int t, float upd, int bt, int bmid, float range, float bddr, float bs, int bn, float minD, float maxD, float upmd, float upxd, 
         float sr, float cp, float cm, float rl, float rdx, float rdz, float dst, float dd, float updd, float mdst, float aost, float aod, float updao, int multinum, float multirate ,int cun)
     {
         Name = n;
@@ -56,6 +57,7 @@ public class TowerStatus
         TowerIndex = t;
         UpgradePerDamage = upd;
         BulletType = bt;
+        BulletModelIndex = bmid;
         Range = range;
         BounceDDR = bddr;
         BulletSpd = bs;
@@ -114,6 +116,7 @@ public class ConstructManager : MonoBehaviour
     public Dictionary<string, List<TowerStatus>> towerStatusDic = new Dictionary<string, List<TowerStatus>>();      // 타워별 리스트를 이름을 통한 딕션으로 저장
     public List<TowerType> towerTypeList = new List<TowerType>();                       // 타워 타입 데이터
     private int nTypeAmount = 34;
+    private int nModelCount = 32;
     private int nMaxLevelofTower = 4;
     // ============================================================================================== //
 
@@ -186,6 +189,7 @@ public class ConstructManager : MonoBehaviour
 
         LoadTowerModel();
 
+        //LoadBulletModel();
         //SetTowerStatus();
 
         SetGroundInfo();
@@ -268,8 +272,9 @@ public class ConstructManager : MonoBehaviour
             groundInfoList[i].TowerIndex = UserDataManager.Instance.TowerDeckList[r];
             groundInfoList[i].TowerLevel = 0;
             groundInfoList[i].TowerIndexOfList = r;
+            int ThisTowerIndex = groundInfoList[i].TowerIndex;
 
-            GameObject goTower = Instantiate(towerModelList[r]);
+            GameObject goTower = Instantiate(towerModelList[ThisTowerIndex]);
             goTower.name = "tower" + i.ToString();
             goTower.AddComponent<Tower>();
             Tower t = goTower.GetComponent<Tower>();
@@ -279,7 +284,7 @@ public class ConstructManager : MonoBehaviour
             UserTowerDic.Add(i, goTower);
 
             UpgradeManager.Instance.Gold -= 100;
-            QuestManager.Instance.GetInfomation(QuestManager.EGlobalQuestInfoType.Construct);
+            QuestManager.Instance.GetInfomation(QuestManager.EMissionType.Construct);
             QuestManager.Instance.OccurToConstructMoment(0, r);
         }
         else
@@ -316,25 +321,48 @@ public class ConstructManager : MonoBehaviour
                     isSearch = true;
                     groundInfoList[i].TowerLevel += 1;  // 클릭한 지역의 타워 레벨은 1업~
 
+                    bool destructMostKillTower = CheckMostKilledTower(i);
+
+                    if (!destructMostKillTower)
+                    {
+                        destructMostKillTower = CheckMostKilledTower(n);
+                    }
+
                     int r = Random.Range(0, 7);
                     groundInfoList[i].TowerIndex = UserDataManager.Instance.TowerDeckList[r];
                     groundInfoList[i].TowerIndexOfList = r;
+                    int ThisTowerIndex = groundInfoList[i].TowerIndex;
 
                     groundInfoList[n].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
                     groundInfoList[n].TowerLevel = -1;
                     groundInfoList[n].TowerIndexOfList = -1;
 
-                    Tower t = UserTowerDic[i].GetComponent<Tower>();
+                    Destroy(UserTowerDic[i].gameObject);
+                    UserTowerDic.Remove(i);
+                    GameObject goTower = Instantiate(towerModelList[ThisTowerIndex]);
+                    UserTowerDic.Add(i, goTower);
+                    goTower.name = "tower" + i.ToString();
+                    goTower.AddComponent<Tower>();
+                    goTower.transform.position = groundInfoList[i].position;
 
-                    //Tower NewTower = ChangeManageMent(t);
+                    Tower t = UserTowerDic[i].GetComponent<Tower>();
                     t.SetTowerStatus(towerStatusDic[towerTypeList[groundInfoList[i].TowerIndex].TowerName][groundInfoList[i].TowerLevel], groundInfoList[i].TowerIndex, i);
                     t.CurrKillCount = 0;
+
+                    //Tower NewTower = ChangeManageMent(t);
                     //SetTowerManageMent(NewTower);
                     Destroy(UserTowerDic[n].gameObject);
                     UserTowerDic.Remove(n);
-                    QuestManager.Instance.GetInfomation(QuestManager.EGlobalQuestInfoType.Merge);
                     QuestManager.Instance.OccurToMergeMoment(Level, index1, Level, index2, Level + 1, r);
 
+                    if(destructMostKillTower)
+                    {
+                        QuestManager.Instance.SetMostKillTowerInit();
+                    }
+
+
+                    QuestManager.Instance.GetInfomation(QuestManager.EMissionType.Construct);
+                    QuestManager.Instance.GetInfomation(QuestManager.EMissionType.Merge);
                     break;
                 }
             }
@@ -354,46 +382,66 @@ public class ConstructManager : MonoBehaviour
         switch (Level)
         {
             case 0:
-                UpgradeManager.Instance.Gold += 50;
+                UpgradeManager.Instance.AddGold(50);
                 break;
 
             case 1:
-                UpgradeManager.Instance.Gold += 100;
+                UpgradeManager.Instance.AddGold(100);
                 break;
 
             case 2:
-                UpgradeManager.Instance.Gold += 200;
+                UpgradeManager.Instance.AddGold(200);
                 break;
 
             case 3:
-                UpgradeManager.Instance.Gold += 400;
+                UpgradeManager.Instance.AddGold(400);
                 break;
 
             case 4:
-                UpgradeManager.Instance.Gold += 800;
+                UpgradeManager.Instance.AddGold(800);
                 break;
         }
 
-        QuestManager.Instance.GetInfomation(QuestManager.EGlobalQuestInfoType.Construct);
         QuestManager.Instance.OccurToDestructMoment(Level, groundInfoList[i].TowerIndexOfList);
 
-        groundInfoList[i].TowerIndex = -1;  // 같은 곳은 타워가 사라진닷
+        bool destructMostKillTower = CheckMostKilledTower(i);
+
+        groundInfoList[i].TowerIndex = -1;  
         groundInfoList[i].TowerLevel = -1;
         groundInfoList[i].TowerIndexOfList = -1;
         Destroy(UserTowerDic[i].gameObject);
         UserTowerDic.Remove(i);
+
+        if(destructMostKillTower)
+        {
+            QuestManager.Instance.SetMostKillTowerInit();
+        }
+        QuestManager.Instance.GetInfomation(QuestManager.EMissionType.Construct);
     }
 
 
     private void LoadTowerModel()
     {
         GameObject go = new GameObject();
-        for (int i = 0; i < 10; ++i)
+        //int ModelCount = DeckManager.Instance.PossesTowerDeckList.Count;
+
+        for (int i = 0; i < nModelCount; ++i)
         {
-            go = Resources.Load<GameObject>("Towers/Tower" + i.ToString());
+            go = Resources.Load<GameObject>("TowerModel/" + i.ToString());
             towerModelList.Add(go);
         }
+        //for (int i = 0; i < 10; ++i)
+        //{
+        //    go = Resources.Load<GameObject>("Towers/Tower" + i.ToString());
+        //    towerModelList.Add(go);
+        //}
     }
+
+    private void LoadBulletModel()
+    {
+
+    }
+
 
     private void LoadTowerInfoLabel()
     {
@@ -573,6 +621,18 @@ public class ConstructManager : MonoBehaviour
         }
     }
 
+    public bool CheckMostKilledTower(int i)
+    {
+        if (groundInfoList[i].index == QuestManager.Instance.GetMostKillTowerIndex())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     // 코루틴 . 디비파싱
     public void TowerStatusDbParsing(string p)
     {
@@ -616,9 +676,9 @@ public class ConstructManager : MonoBehaviour
                     {
                         // Debug.Log(reader.GetString(1));  //  타입명 . (몇 열에있는것을 불를것인가)
                         TowerStatus t = new TowerStatus(reader.GetString(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3) ,reader.GetFloat(4), reader.GetFloat(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetFloat(8), reader.GetInt32(9),
-                             reader.GetFloat(10), reader.GetFloat(11), reader.GetFloat(12), reader.GetInt32(13), reader.GetFloat(14), reader.GetFloat(15), reader.GetFloat(16), reader.GetFloat(17), reader.GetFloat(18), reader.GetFloat(19),
-                             reader.GetFloat(20), reader.GetFloat(21), reader.GetFloat(22), reader.GetFloat(23), reader.GetFloat(24), reader.GetFloat(25), reader.GetFloat(26), reader.GetFloat(27), reader.GetFloat(28),
-                             reader.GetFloat(29), reader.GetFloat(30), reader.GetInt32(31), reader.GetFloat(32), reader.GetInt32(33));
+                             reader.GetInt32(10), reader.GetFloat(11), reader.GetFloat(12), reader.GetFloat(13), reader.GetInt32(14), reader.GetFloat(15), reader.GetFloat(16), reader.GetFloat(17), reader.GetFloat(18), reader.GetFloat(19), reader.GetFloat(20),
+                             reader.GetFloat(21), reader.GetFloat(22), reader.GetFloat(23), reader.GetFloat(24), reader.GetFloat(25), reader.GetFloat(26), reader.GetFloat(27), reader.GetFloat(28), reader.GetFloat(29),
+                             reader.GetFloat(30), reader.GetFloat(31), reader.GetInt32(32), reader.GetFloat(33), reader.GetInt32(34));
 
                         if (Count <= nMaxLevelofTower)   
                         {

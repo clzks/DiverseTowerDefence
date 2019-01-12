@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Define
 {
-    public static readonly string Ruby = "Ruby";
+    public static readonly string Gems = "Gems";
     public static readonly string PlayNum = "PlayNum";
     public static readonly string HighestStage = "HighestStage";
     public static readonly string ClearCount = "ClearCount";

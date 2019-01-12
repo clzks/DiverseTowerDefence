@@ -5,19 +5,15 @@ using UnityEngine;
 public class QuestData
 {
     public int MostKillCountTower;
+    public int MostKillCountTowerIndex;
+
     public int fCurrAllKillCount;
     public int CurrHp;
 
-    //public TypeOfTower TOTLevelZero;        // 인덱스별 타워 수량.. 
-    //public TypeOfTower TOTLevelOne;
-    //public TypeOfTower TOTLevelTwo;
-    //public TypeOfTower TOTLevelThree;
-    //public TypeOfTower TOTLevelFour;
-
-
+    public int MergeCount;
+    public int CompleteQuestCount;
     
-    
-
+ 
 
     public List<TypeOfTower> ToTLevelNumList = new List<TypeOfTower>();
 
@@ -33,6 +29,8 @@ public class QuestData
         MostKillCountTower = 0;
         fCurrAllKillCount = 0;
         CurrHp = 100;
+        MergeCount = 0;
+        CompleteQuestCount = 0;
 
         for (int i = 0; i < 5; i++)
         {
@@ -56,7 +54,7 @@ public class QuestData
         //RenewBitArray(level, IndexOfDeckList);
     }
 
-
+   
 
     public int CheckNumberOfTower(ConstructManager.ETowerType type)
     {
@@ -82,7 +80,13 @@ public class QuestData
     public int CheckNumberOfTower(int level)
     {
         int num = 0;
-
+        for (int i = 0; i < 8; ++i)
+        {
+            if (ToTLevelNumList[level].TypeOfTowerLevel[i] > 0)
+            {
+                num++;
+            }
+        }
         return num;
     }
 
@@ -117,4 +121,27 @@ public class QuestData
     {
         CurrHp--;
     }
+
+    
+    //public int GetMostKillCountTower()
+    //{
+    //    return MostKillCountTower;
+    //}
+    //
+    //public int GetCurrAllKillCount()
+    //{
+    //    return fCurrAllKillCount;
+    //}
+    //public int GetCurrHp()
+    //{
+    //    return CurrHp;
+    //}
+    //public int GetMergeCount()
+    //{
+    //    return MergeCount;
+    //}
+    //public int GetCompleteQuestCount()
+    //{
+    //    return CompleteQuestCount;
+    //}
 }

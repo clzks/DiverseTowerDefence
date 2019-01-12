@@ -54,8 +54,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: b8cbb2637aa0d2143a3d02e1bfd1fac8, type: 2}
   mSprites:
   - name: ConstructPanel
-    x: 0
-    y: 484
+    x: 120
+    y: 64
     width: 105
     height: 120
     borderLeft: 0
@@ -67,8 +67,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: ConstructPanelUnChecked
-    x: 825
-    y: 544
+    x: 225
+    y: 184
     width: 105
     height: 120
     borderLeft: 0
@@ -80,8 +80,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: ConstructPanelUnCheckedl
-    x: 720
-    y: 604
+    x: 120
+    y: 184
     width: 105
     height: 120
     borderLeft: 0
@@ -93,8 +93,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: ConstructTowerButton
-    x: 300
-    y: 874
+    x: 600
+    y: 524
     width: 300
     height: 150
     borderLeft: 0
@@ -106,8 +106,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: ConstructTowerButtonUnChecked
-    x: 0
-    y: 874
+    x: 300
+    y: 674
     width: 300
     height: 150
     borderLeft: 0
@@ -119,8 +119,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: GameSpd_1x
-    x: 930
-    y: 623
+    x: 44
+    y: 23
     width: 44
     height: 41
     borderLeft: 0
@@ -132,8 +132,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: GameSpd_2x
-    x: 825
-    y: 683
+    x: 0
+    y: 23
     width: 44
     height: 41
     borderLeft: 0
@@ -144,9 +144,22 @@ MonoBehaviour:
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
+  - name: Global_Quest_Text_Panel
+    x: 0
+    y: 824
+    width: 900
+    height: 200
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
   - name: MergeTowerButton
-    x: 600
-    y: 874
+    x: 0
+    y: 524
     width: 300
     height: 150
     borderLeft: 0
@@ -159,7 +172,7 @@ MonoBehaviour:
     paddingBottom: 0
   - name: MergeTowerButtonUnChecked
     x: 600
-    y: 724
+    y: 674
     width: 300
     height: 150
     borderLeft: 0
@@ -171,8 +184,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Multi+Bouncing_Upgrade
-    x: 480
-    y: 604
+    x: 0
+    y: 64
     width: 120
     height: 120
     borderLeft: 0
@@ -184,8 +197,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Quest_First
-    x: 600
-    y: 604
+    x: 0
+    y: 184
     width: 120
     height: 120
     borderLeft: 0
@@ -197,8 +210,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Quest_Second
-    x: 900
-    y: 784
+    x: 120
+    y: 304
     width: 120
     height: 120
     borderLeft: 0
@@ -223,8 +236,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: QuestPanel
-    x: 210
-    y: 484
+    x: 330
+    y: 184
     width: 105
     height: 120
     borderLeft: 0
@@ -236,8 +249,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: QuestPanelUnchecked
-    x: 315
-    y: 484
+    x: 225
+    y: 64
     width: 105
     height: 120
     borderLeft: 0
@@ -250,7 +263,7 @@ MonoBehaviour:
     paddingBottom: 0
   - name: Range_Upgrade
     x: 900
-    y: 904
+    y: 784
     width: 120
     height: 120
     borderLeft: 0
@@ -262,8 +275,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Rapid_Upgrade
-    x: 240
-    y: 604
+    x: 900
+    y: 904
     width: 120
     height: 120
     borderLeft: 0
@@ -275,8 +288,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Rapid_Upgrade_Ver2
-    x: 360
-    y: 604
+    x: 900
+    y: 544
     width: 120
     height: 120
     borderLeft: 0
@@ -289,7 +302,7 @@ MonoBehaviour:
     paddingBottom: 0
   - name: SellTowerButton
     x: 0
-    y: 724
+    y: 674
     width: 300
     height: 150
     borderLeft: 0
@@ -302,7 +315,7 @@ MonoBehaviour:
     paddingBottom: 0
   - name: SellTowerButtonUnChecked
     x: 300
-    y: 724
+    y: 524
     width: 300
     height: 150
     borderLeft: 0
@@ -314,8 +327,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Splash+AoE_Upgrade
-    x: 0
-    y: 604
+    x: 900
+    y: 424
     width: 120
     height: 120
     borderLeft: 0
@@ -327,8 +340,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: Temp_RangeTower_Upgrade
-    x: 120
-    y: 604
+    x: 0
+    y: 304
     width: 120
     height: 120
     borderLeft: 0
@@ -340,8 +353,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: TowerUpgradePanel
-    x: 105
-    y: 484
+    x: 240
+    y: 304
     width: 105
     height: 120
     borderLeft: 0
@@ -353,8 +366,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: TowerUpgradePanelUnchecked
-    x: 420
-    y: 484
+    x: 345
+    y: 304
     width: 105
     height: 120
     borderLeft: 0
@@ -366,8 +379,8 @@ MonoBehaviour:
     paddingTop: 0
     paddingBottom: 0
   - name: UI_Info
-    x: 869
-    y: 697
+    x: 88
+    y: 37
     width: 17
     height: 27
     borderLeft: 0

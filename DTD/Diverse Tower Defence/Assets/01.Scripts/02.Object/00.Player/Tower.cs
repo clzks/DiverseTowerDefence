@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     public string Name;
-    public int ID;                       // 타워 ID
+    public int ID;                       // 타워 ID (그라운드 ID와 같음)
     public int Level;
     public int TowerType;                
     public float Attack;
@@ -13,7 +13,8 @@ public class Tower : MonoBehaviour
     public int SellCost;
     public int TowerIndex;               // 타워 타입에 따른 ID
     public float UpgradePerDamage;
-    public int BulletType;                  // 공격타입 (즉발, 투사체, 광선, 멀티샷, 스플)
+    public int BulletType;               // 공격타입 (즉발, 투사체, 광선, 멀티샷, 스플)
+    public int BulletModelIndex;         // 불릿 모델 인덱스
     public float Range;                  // 공격사거리
     public float BounceDDR;              // 튕길때마다 데미지 감소 비율
     public float BulletSpd;
@@ -290,7 +291,7 @@ public class Tower : MonoBehaviour
                 for (int i = 0; i < targets.Count; ++i)
                 {
                     //Enemy e = targets[i].GetComponent<Enemy>();
-                    BulletManager.Instance.MakeBullet(ID, i, isCritical);
+                    BulletManager.Instance.MakeBullet(ID, i, isCritical, BulletModelIndex);
                 }
             }
             else
@@ -298,14 +299,14 @@ public class Tower : MonoBehaviour
                 for (int i = 0; i < targets.Count; ++i)
                 {
                     //Enemy e = targets[i].GetComponent<Enemy>();
-                    BulletManager.Instance.MakeLaserBullet(ID, i, isCritical);
+                    BulletManager.Instance.MakeLaserBullet(ID, i, isCritical, BulletModelIndex);
                 }
             }
             fCurrCooltime = AtkSpd;
         }
         else    // 근접타워는 타깃이 피료없다!
         {
-            BulletManager.Instance.MakeBullet(ID, 0, false);
+            BulletManager.Instance.MakeBullet(ID, 0, false, BulletModelIndex);
             fCurrCooltime = AtkSpd;
         }
         
@@ -328,6 +329,7 @@ public class Tower : MonoBehaviour
         TowerIndex = ts.TowerIndex;
         UpgradePerDamage = ts.UpgradePerDamage;
         BulletType = ts.BulletType;
+        BulletModelIndex = ts.BulletModelIndex;
         Range = ts.Range;
         BounceDDR = ts.BounceDDR;
         BulletSpd = ts.BulletSpd;
@@ -357,7 +359,7 @@ public class Tower : MonoBehaviour
         CurrKillCount = 0;
     }
 
-    public void SetTowerStatus(TowerStatus ts)      // 예전에 타워 테스트할때 썼던듯 
+    public void SetTowerStatus(TowerStatus ts)      // 예전에 타워 테스트할때 썼음.. 이제 안씀
     {
         Name = ts.Name;
         ID = 0;
@@ -369,6 +371,7 @@ public class Tower : MonoBehaviour
         TowerIndex = ts.TowerIndex;
         UpgradePerDamage = ts.UpgradePerDamage;
         BulletType = ts.BulletType;
+        BulletModelIndex = ts.BulletModelIndex;
         Range = ts.Range;
         BounceDDR = ts.BounceDDR;
         BulletSpd = ts.BulletSpd;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class DeckManager : MonoBehaviour
 {
     public List<int> PossesTowerDeckList = new List<int>();                 // 보유한 모든 덱 리스트
-    public List<int> SelectedTowerList = new List<int>();                  // 선택된 타워들 리스트
+    public List<int> CurrentDeckList = new List<int>();                  // 선택된 타워들 리스트
     public List<Sprite> DeckSpriteList = new List<Sprite>();               // 타워들 텍스쳐
 
     public int nCurrPage = 1;
@@ -36,6 +36,7 @@ public class DeckManager : MonoBehaviour
     public void Init()
     {
         PossesTowerDeckList = UserDataManager.Instance.PossesTowerList;
+        CurrentDeckList = UserDataManager.Instance.CurrentDeckList;
 
         nTotalPageNum = (PossesTowerDeckList.Count / 8) + (PossesTowerDeckList.Count % 8 != 0 ? 1 : 0); //
 
@@ -49,13 +50,5 @@ public class DeckManager : MonoBehaviour
     {
         
     }
-
-    //private void Update()
-    //{
-    //    if(GameManager.Instance.nCurrentScene == 3)
-    //    {
-    //
-    //    }
-    //}
    
 }

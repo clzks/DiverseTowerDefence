@@ -9,7 +9,7 @@ public class Reward : MonoBehaviour
         Gem,
         Gold,
         Life,
-        Ap,
+        Ap,         // 행동력
         Etc,
     }
 

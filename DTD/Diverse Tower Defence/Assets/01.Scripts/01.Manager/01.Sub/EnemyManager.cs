@@ -60,7 +60,7 @@ public class EnemyManager : MonoBehaviour
     public List<GameObject> EnemyPool = new List<GameObject>();
     public List<GameObject> EnemyModelPool = new List<GameObject>();
     public GameObject Boss;                      // 보스전용 오브젝트도 하나 만드네 ㅋ 
-    public int nPoolNum = 20;                    // 최대 풀링 갯수
+    public int nPoolNum = 40;                    // 최대 풀링 갯수
     public int nMadeMonsterNumber = 0;           // 생성된 몬스터 숫자
     public int EliminatedNum = 0;                // 생성숫자랑 죽은숫자가 40일때 라운드가 끝난다고 해놓은것인데 이것도 맘에들진 않네요.. 
     public Transform tStartPosition;             // 적군 시작 위치.

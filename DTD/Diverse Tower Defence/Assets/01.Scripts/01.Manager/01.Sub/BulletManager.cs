@@ -62,7 +62,7 @@ public class BulletManager : MonoBehaviour
        
     }
 
-    public void MakeLaserBullet(int towerIndex, int TargetListIndex, bool isCri)
+    public void MakeLaserBullet(int towerIndex, int TargetListIndex, bool isCri, int nBulletModelIndex)
     {
         int n = PoolManager.Instance.GetPoolObject(bulletPool.Count, bulletPool);
 
@@ -74,7 +74,7 @@ public class BulletManager : MonoBehaviour
             gSrcBullet.SetActive(false);
             PoolManager.Instance.AddObjectPool(ref bulletPool, gSrcBullet);
 
-            GameObject bullet = (GameObject)Instantiate(bulletModelList[1], bulletPool[nSize].transform);   // 풀이 하나 늘어났기 때문에 아까의 nSize는 지금의 마지막 인덱스 번호가 된다.
+            GameObject bullet = (GameObject)Instantiate(bulletModelList[nBulletModelIndex], bulletPool[nSize].transform);   // 풀이 하나 늘어났기 때문에 아까의 nSize는 지금의 마지막 인덱스 번호가 된다.
             bullet.AddComponent<Bullet>();
             Bullet b = bullet.GetComponent<Bullet>();
             b.SetBullet(towerIndex, nSize, TargetListIndex, isCri);
@@ -82,7 +82,7 @@ public class BulletManager : MonoBehaviour
         }
         else                // 활성화 안된 총알을 발견했을 때    
         {
-            GameObject bullet = (GameObject)Instantiate(bulletModelList[1], bulletPool[n].transform);
+            GameObject bullet = (GameObject)Instantiate(bulletModelList[nBulletModelIndex], bulletPool[n].transform);
             bullet.AddComponent<Bullet>();
             Bullet b = bullet.GetComponent<Bullet>();
             b.SetBullet(towerIndex, n, TargetListIndex, isCri);
@@ -90,7 +90,7 @@ public class BulletManager : MonoBehaviour
         }
     }
 
-    public void MakeBullet(int towerIndex, int TargetListIndex, bool isCri)
+    public void MakeBullet(int towerIndex, int TargetListIndex, bool isCri, int nBulletModelIndex)
     {
         int n = PoolManager.Instance.GetPoolObject(bulletPool.Count, bulletPool); 
 
@@ -102,7 +102,7 @@ public class BulletManager : MonoBehaviour
             gSrcBullet.SetActive(false);
             PoolManager.Instance.AddObjectPool(ref bulletPool, gSrcBullet);
 
-            GameObject bullet = (GameObject)Instantiate(bulletModelList[0], bulletPool[nSize].transform);   // 풀이 하나 늘어났기 때문에 아까의 nSize는 지금의 마지막 인덱스 번호가 된다.
+            GameObject bullet = (GameObject)Instantiate(bulletModelList[nBulletModelIndex], bulletPool[nSize].transform);   // 풀이 하나 늘어났기 때문에 아까의 nSize는 지금의 마지막 인덱스 번호가 된다.
             bullet.AddComponent<Bullet>();
             Bullet b = bullet.GetComponent<Bullet>();
             b.SetBullet(towerIndex, nSize, TargetListIndex, isCri);
@@ -110,7 +110,7 @@ public class BulletManager : MonoBehaviour
         }
         else                // 활성화 안된 총알을 발견했을 때    
         {
-            GameObject bullet = (GameObject)Instantiate(bulletModelList[0], bulletPool[n].transform);
+            GameObject bullet = (GameObject)Instantiate(bulletModelList[nBulletModelIndex], bulletPool[n].transform);
             bullet.AddComponent<Bullet>();
             Bullet b = bullet.GetComponent<Bullet>();
             b.SetBullet(towerIndex, n, TargetListIndex, isCri);

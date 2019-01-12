@@ -9,7 +9,7 @@ public class UpgradeManager : MonoBehaviour
     public int RangeUpgrade = 0;
     public int RapidUpgrade = 0;
     public int SplashAoEUpgrade = 0;
-    public int Gold = 500;
+    public int Gold = 1000;
 
     private static object _Lock = new object();
     public static UpgradeManager instance = null;
@@ -30,6 +30,11 @@ public class UpgradeManager : MonoBehaviour
         }
     }
     
+    public void AddGold(int i)
+    {
+        Gold += i;
+        StageManager.Instance.inGameData.InitSetting();
+    }
 
     public void Upgrade(ref int i)
     {

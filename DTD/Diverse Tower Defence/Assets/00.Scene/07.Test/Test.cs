@@ -27,6 +27,8 @@ public class Test : MonoBehaviour
                 label.transform.position = ScreenPos;
             }
         }
+
+        
     }
 
     public void GameStart()

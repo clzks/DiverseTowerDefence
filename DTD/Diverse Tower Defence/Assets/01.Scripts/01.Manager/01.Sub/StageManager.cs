@@ -169,8 +169,8 @@ public class StageManager : MonoBehaviour
                 case 4:
                     EnemyManager.Instance.nMadeMonsterNumber = 0;
                     nPhase = 0;
-                    print("스테이지 완료! 골드 100 지급!");
-                    UpgradeManager.Instance.Gold += 100;
+                    print("스테이지 완료! 골드 200 지급!");
+                    GetGold(200);
                     inGameData.InitSetting();
                 break;
 
@@ -212,6 +212,7 @@ public class StageManager : MonoBehaviour
         }
         inGameData = GameObject.Find("Scripts").GetComponent<InGameData>();
         QuestManager.Instance.SetLabel();
+        QuestManager.Instance.SetQuestUI();
         isSetLabel = true;
     }
 
@@ -278,7 +279,6 @@ public class StageManager : MonoBehaviour
                 nStage++;
 
                 fWatingTime = 5.0f;
-                //print("스테이지 넘기기");
                 Debug.Log("스테이지 넘기기");
             }
             else
@@ -292,5 +292,10 @@ public class StageManager : MonoBehaviour
         {
             EnemyManager.Instance.TakeDamage(100);
         }
+    }
+
+    private void GetGold(int value)
+    {
+        UpgradeManager.Instance.Gold += value;
     }
 }
