@@ -43,9 +43,12 @@ public class TowerStatus
     public int MultiNum;                 // 멀티샷 추가 개수
     public float MultiRate;              // 멀티샷의 데미지 비율
     public int CurrUpgradeNum;           // 현재 업그레이드 숫자
+    public int TowerRotaion;
+    public int MovingEffectId;           // 이동중 이펙트 (총알)
+    public int ExtinctionEffectId;       // 소멸시 이펙트 (총알)
 
     public TowerStatus(string n, int id, int lev, int type, float a, float s, int c, int t, float upd, int bt, int bmid, float range, float bddr, float bs, int bn, float minD, float maxD, float upmd, float upxd, 
-        float sr, float cp, float cm, float rl, float rdx, float rdz, float dst, float dd, float updd, float mdst, float aost, float aod, float updao, int multinum, float multirate ,int cun)
+        float sr, float cp, float cm, float rl, float rdx, float rdz, float dst, float dd, float updd, float mdst, float aost, float aod, float updao, int multinum, float multirate ,int cun, int tr, int meid, int eeid)
     {
         Name = n;
         ID = id;
@@ -82,6 +85,9 @@ public class TowerStatus
         MultiNum = multinum;
         MultiRate = multirate;
         CurrUpgradeNum = cun;
+        TowerRotaion = tr;
+        MovingEffectId = meid;
+        ExtinctionEffectId = eeid;
     }
 }
 
@@ -678,7 +684,7 @@ public class ConstructManager : MonoBehaviour
                         TowerStatus t = new TowerStatus(reader.GetString(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3) ,reader.GetFloat(4), reader.GetFloat(5), reader.GetInt32(6), reader.GetInt32(7), reader.GetFloat(8), reader.GetInt32(9),
                              reader.GetInt32(10), reader.GetFloat(11), reader.GetFloat(12), reader.GetFloat(13), reader.GetInt32(14), reader.GetFloat(15), reader.GetFloat(16), reader.GetFloat(17), reader.GetFloat(18), reader.GetFloat(19), reader.GetFloat(20),
                              reader.GetFloat(21), reader.GetFloat(22), reader.GetFloat(23), reader.GetFloat(24), reader.GetFloat(25), reader.GetFloat(26), reader.GetFloat(27), reader.GetFloat(28), reader.GetFloat(29),
-                             reader.GetFloat(30), reader.GetFloat(31), reader.GetInt32(32), reader.GetFloat(33), reader.GetInt32(34));
+                             reader.GetFloat(30), reader.GetFloat(31), reader.GetInt32(32), reader.GetFloat(33), reader.GetInt32(34), reader.GetInt32(35), reader.GetInt32(36), reader.GetInt32(37));
 
                         if (Count <= nMaxLevelofTower)   
                         {

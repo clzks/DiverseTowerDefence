@@ -258,6 +258,7 @@ public class StageManager : MonoBehaviour
             EnemyManager.Instance.MakeEnemyPool();
             //EnemyManager.Instance.MakeEnemyDamagePool();
             BulletManager.Instance.MakeBulletPool();
+            EffectManager.Instance.InitEffectPool();
         }
     }
     public void OccurToMonsterEndline()

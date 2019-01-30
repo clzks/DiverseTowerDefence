@@ -305,7 +305,7 @@ public class EnemyManager : MonoBehaviour
             go = Resources.Load<GameObject>("Boss" + i.ToString());
             BossModelList.Add(go);
         }
-
+        
         go = Resources.Load<GameObject>("Orc_Archer_High");
         EnemyModelList.Add(go);
         go = Resources.Load<GameObject>("Orc_BladeMaster");

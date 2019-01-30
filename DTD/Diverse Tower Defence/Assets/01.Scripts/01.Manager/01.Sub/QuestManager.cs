@@ -328,7 +328,8 @@ public class QuestManager : MonoBehaviour
             g = Instantiate(QuestPanel, grid.transform, false);
             g.name = "Quest" + index.ToString();
             UILabel label = g.GetComponentInChildren<UILabel>();
-            string progress = "진행 상황 (" + CurrGlobalQuestList[index].GetProgressCount() + " / " + CurrGlobalQuestList[index].nGoalCount + ")";
+
+            string progress = string.Format("진행 상황 [b][FF0000]({0} / {1})[-][/b]", CurrGlobalQuestList[index].GetProgressCount(), CurrGlobalQuestList[index].nGoalCount);//  "진행 상황 (" + CurrGlobalQuestList[index].GetProgressCount() + " / " + CurrGlobalQuestList[index].nGoalCount + ")";
             label.text = CurrGlobalQuestList[index].Text + progress;
             index++;
             CurrQuestPanelList.Add(g);
@@ -345,7 +346,7 @@ public class QuestManager : MonoBehaviour
         {
             g = Instantiate(QuestPanel, grid.transform, false);
             UILabel label = g.GetComponentInChildren<UILabel>();
-            string progress = "진행 상황 (" + CurrGlobalQuestList[index].GetProgressCount() + " / " + CurrGlobalQuestList[index].nGoalCount + ")";
+            string progress = string.Format("진행 상황 [b][FF0000]({0} / {1})[-][/b]", CurrGlobalQuestList[index].GetProgressCount(), CurrGlobalQuestList[index].nGoalCount);//  "진행 상황 (" + CurrGlobalQuestList[index].GetProgressCount() + " / " + CurrGlobalQuestList[index].nGoalCount + ")";
             label.text = CurrGlobalQuestList[index].Text + progress;
             index++;
             CurrQuestPanelList.Add(g);
@@ -356,7 +357,7 @@ public class QuestManager : MonoBehaviour
     public void RenewQuestUI(int index)
     {
         UILabel label = CurrQuestPanelList[index].GetComponentInChildren<UILabel>();
-        string progress = "진행 상황 (" + CurrGlobalQuestList[index].GetProgressCount() + " / " + CurrGlobalQuestList[index].nGoalCount + ")";
+        string progress = string.Format("진행 상황 [b][FF0000]({0} / {1})[-][/b]", CurrGlobalQuestList[index].GetProgressCount(), CurrGlobalQuestList[index].nGoalCount);//  "진행 상황 (" + CurrGlobalQuestList[index].GetProgressCount() + " / " + CurrGlobalQuestList[index].nGoalCount + ")";
         label.text = CurrGlobalQuestList[index].Text + progress;
     }
 

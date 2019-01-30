@@ -39,12 +39,16 @@ public class Tower : MonoBehaviour
     public int MultiNum;                 // 멀티샷 추가 갯수
     public float MultiRate;              // 멀티샷 데미지 비율
     public int CurrUpgradeNum;           // 현재업글 숫자
-    public int CurrKillCount;       
+    public int CurrKillCount;
+    public int TowerRotaion;             // 타워 회전 (0 : 안함, 1: 함) 
+    public int MovingEffectId;           // 이동중 이펙트 (총알)
+    public int ExtinctionEffectId;       // 소멸시 이펙트 (총알)
+
     // =============================================================== //
     //public GameObject Target;   // 설정된 타깃
     public List<GameObject> Target = new List<GameObject>();    // 리스트의 0번이 타워가 바라보게 될 타겟
     public Vector3 vPosition;
-    
+    public GameObject TowerTop;
     // =============================================================== //
 
     // ========================= 총알 발사 관련 ============================ //
@@ -65,9 +69,8 @@ public class Tower : MonoBehaviour
 
     private void Awake()
     {
-        vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
         fCurrCooltime = AtkSpd;
-       
+        
     }
     private void Start()
     {
@@ -150,14 +153,21 @@ public class Tower : MonoBehaviour
                 if(Dest != null)
                 Target.Add(Dest);
 
-                if (Target.Count != 0)
+                if (Target.Count != 0 && TowerRotaion == 1) // 타깃을 찾았다면
                 {
-                    transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
+                    TowerTop.transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
+                }
+                else if(Target.Count == 0 && TowerRotaion == 1) // 못찾았다면
+                {
+                    TowerTop.transform.rotation = Quaternion.identity;
                 }
             }
             else    // 타겟이 있으면
             {
-                transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
+                if (TowerRotaion == 1)
+                {
+                    TowerTop.transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
+                }
                 if (Vector3.Distance(vPosition, Target[0].transform.position) > Range)
                 {
                     Target[0] = null;
@@ -192,10 +202,16 @@ public class Tower : MonoBehaviour
                 if(target != null)
                 Target.Add(target);
 
-                if (Target.Count != 0)
+                if (Target.Count != 0 && TowerRotaion == 1) // 타깃을 찾았음
                 {
-                    transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
+                    TowerTop.transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
                 }
+                else if (Target.Count == 0 && TowerRotaion == 1) // 못찾았다면
+                {
+                    TowerTop.transform.rotation = Quaternion.identity;
+                    
+                }
+
             }
 
             if(Target.Count != 0)    // 타겟이 있으면 0번 인덱스가 타깃
@@ -253,7 +269,7 @@ public class Tower : MonoBehaviour
                     Target.Remove(Target[Target.Count-1]);
                 }
 
-                transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
+                TowerTop.transform.LookAt(new Vector3(Target[0].transform.position.x, 0, Target[0].transform.position.z));
                 if (Vector3.Distance(vPosition, Target[0].transform.position) > Range)
                 {
                     Target[0] = null;
@@ -357,6 +373,20 @@ public class Tower : MonoBehaviour
         vPosition = ConstructManager.Instance.groundInfoList[groundIndex].position;
         vPosition.y = 0.0f;
         CurrKillCount = 0;
+        TowerRotaion = ts.TowerRotaion;
+        MovingEffectId = ts.MovingEffectId;
+        ExtinctionEffectId = ts.ExtinctionEffectId;
+
+        if (TowerRotaion == 1)   // 1이면 타워 회전
+        {
+            TowerTop = GameObject.Find(this.name + "/Top");
+            vMuzzlePos = GameObject.Find(this.name + "Top/Muzzle").transform.position;
+
+        }
+        else
+        {
+            vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
+        }
     }
 
     public void SetTowerStatus(TowerStatus ts)      // 예전에 타워 테스트할때 썼음.. 이제 안씀
@@ -402,6 +432,18 @@ public class Tower : MonoBehaviour
         CurrUpgradeNum++;
     }
 
+    public void SetMuzzlePosition()
+    {
+        if (TowerRotaion == 1)   // 1이면 타워 회전
+        {
+            //TowerTop = GameObject.Find(this.name + "/Top");
+            vMuzzlePos = GameObject.Find(this.name + "Top/Muzzle").transform.position;
+        }
+        else
+        {
+            vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
+        }
+    }
 
     private void OnDrawGizmos()
     {
@@ -429,7 +471,8 @@ public class Tower : MonoBehaviour
         }
         else if(isStart && fCurrCooltime <= 0)       // 타겟이 있고 쿨타임이 0보다 줄어들었다면
         {
-            vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
+            //vMuzzlePos = GameObject.Find(this.name + "/Muzzle").transform.position;
+            SetMuzzlePosition();
 
             if (TowerType != (int)ConstructManager.ETowerType.Normal)
             {

@@ -4,13 +4,16 @@ using UnityEngine;
 [SelectionBase]
 public class Bullet : MonoBehaviour
 {
-
+    //public ParticleSystem ps;
     public int nId;
     public GameObject Target;
     public int nTargetId;
-    public Animation anim;
+    //public Animation anim;
     public int nTowerId;
-    public int nEffectId;     // ??? 뭔디 아마도 이펙트에 id값을 줘서 불러올라고 했던것같음 (파티클) 
+    public int nMovingEffectId;                   // 이동중 적용될 파티클 이펙트의 ID 
+    public int nExtinctionEffectId;         // 소멸 시 적용될 파티클 이펙트의 ID
+    public Effect MovingEffect;
+    //public Effect ExtinctionEffect;
     public bool doDamaged;    // 피해를 주었는가?
 
     public float BulletSpd = 0.05f;
@@ -58,7 +61,7 @@ public class Bullet : MonoBehaviour
 
     private void Start()
     {
-        if(nAttackType == (int)ConstructManager.EAttackType.Laser)
+        if (nAttackType == (int)ConstructManager.EAttackType.Laser)
         {
             vDir = Vector3.Normalize(Target.transform.parent.transform.position - transform.position);
             LaserBody.transform.rotation = Quaternion.LookRotation(vDir);
@@ -88,7 +91,8 @@ public class Bullet : MonoBehaviour
         transform.position = t.vMuzzlePos;
         AoESustainTime = t.AOSustainTime;
         nTowerId = towerId;
-        nEffectId = 0;
+        nMovingEffectId = t.MovingEffectId;
+        nExtinctionEffectId = t.ExtinctionEffectId;
         nlevel = t.Level;
 
         // 총알의 스탯  ------- 일단 투사체일때만
@@ -329,6 +333,7 @@ public class Bullet : MonoBehaviour
             for (int i = 0; i < EnemyList.Count; ++i)
             {
                 EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
+                MakeExtinctionEffect();
             }
         }
         //else
@@ -360,6 +365,7 @@ public class Bullet : MonoBehaviour
         for (int i = 0; i < EnemyList.Count; ++i)
         {
             EnemyList[i].Damage(this);   // 데미지는 타워에서 결정
+            
         }
         nLife--;
 
@@ -488,6 +494,8 @@ public class Bullet : MonoBehaviour
         }
         GameObject Bullet = transform.parent.gameObject;
         Bullet.SetActive(false);
+        DestroyMovingEffect();
+        
         Destroy(this.gameObject);
     }
 
@@ -507,6 +515,30 @@ public class Bullet : MonoBehaviour
                     Gizmos.DrawWireSphere(transform.position, fSplashRange);
                     break;
             }
+        }
+    }
+
+    public void DestroyMovingEffect()
+    {
+        if (nMovingEffectId != -1)
+        {
+            MovingEffect.DestroyEffect();
+        }
+    }
+
+    public void MakeExtinctionEffect()
+    {
+        if(nExtinctionEffectId != -1)
+        {
+            if (Target != null)
+            {
+                EffectManager.instance.MakeEffect(EffectManager.Instance.EffectInfolist[nExtinctionEffectId], Target.transform.position);
+            }
+            else
+            {
+                EffectManager.instance.MakeEffect(EffectManager.Instance.EffectInfolist[nExtinctionEffectId], transform.position);
+            }
+            //EffectManager.instance.MakeEffect(EffectManager.Instance.EffectInfolist[nExtinctionEffectId], transform.parent);
         }
     }
 }

@@ -20,8 +20,12 @@ public class Define
     public static readonly string RangeUpgrade = "RangeUpgrade";
     public static readonly string RapidUpgrade = "RapidUpgrade";
     public static readonly string SplashAoEUpgrade = "SplashAoEUpgrade";
-
     public static readonly string CurrKillCount = "CurrKillCount";
+
+    public static readonly string BulletEffectsAddress = "Effects/BulletEffects/";
+    public static readonly string TestEffectsAddress = "Effects/TestEffects/";
+    public static readonly string UIEffectsAddress = "Effects/UIEffects/";
+
 
     public static Quaternion GetRotFromVectors(Vector3 vDir)
     {

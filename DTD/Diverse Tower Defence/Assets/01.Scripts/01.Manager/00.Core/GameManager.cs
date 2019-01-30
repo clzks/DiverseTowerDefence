@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
 
         BulletManager.Instance.LoadModelList();
         QuestManager.Instance.InitQuestData();
+        EffectManager.Instance.InitManager();
     }
 
     private void FixedUpdate()
